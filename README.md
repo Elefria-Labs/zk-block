@@ -3,7 +3,8 @@
 Work in Progress
 
 Design can be found here - [ZkBlock](https://zkblock.app)
-Note: that design can change
+
+- Note: that design can change
 
 ### Getting started
 

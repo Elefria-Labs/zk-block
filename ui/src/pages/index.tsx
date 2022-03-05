@@ -20,9 +20,7 @@ const Index = () => {
           overflowX: 'hidden',
           display: 'flex',
           flex: '1',
-
           justifyContent: 'center',
-          border: '2px solid red',
         }}
       >
         <img
