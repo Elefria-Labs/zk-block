@@ -27,6 +27,8 @@
         "project": "./tsconfig.json"
       },
       "rules": {
+        "no-console": "warn",
+        "react/display-name": "off",
         "prettier/prettier": [
           "error",
           {
