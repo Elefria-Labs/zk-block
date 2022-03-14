@@ -1,4 +1,8 @@
 body {
   margin: 0;
   padding: 0;
+  background-image: url(../../public/assets/images/zk-block-bg.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: '100vh';
 }
