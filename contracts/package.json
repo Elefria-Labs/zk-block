@@ -1,0 +1,52 @@
+{
+  "name": "zk-block",
+  "version": "0.0.1",
+  "description": "Sample solidity contracts, zk-SNARK circuits, and test scripts for the zero-knowledge proofs.",
+  "scripts": {
+    "compile:contracts": "npx hardhat compile",
+    "develop": "npx hardhat node",
+    "deploy:localhost": "npx hardhat deploy --tags complete",
+    "deploy:testnet": "npx hardhat deploy --network testnet",
+    "deploy:mainnet": "npx hardhat deploy --network mainnet",
+    "export:localhost": "mkdir -p exports && npx hardhat --network localhost export --export exports/localhost.json",
+    "test:dapp": "jest",
+    "test:fullProof": "npm run compile:circuits && npm run verifier:fix && npm run test",
+    "test": "npx hardhat test",
+    "compile:circuits": "scripts/build-circuits.sh <<< $'random text'",
+    "verifier:fix": "node scripts/bump-solidity"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heypran/zk-block.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heypran/zk-block/issues"
+  },
+  "homepage": "https://github.com/heypran/zk-block.git#readme",
+  "dependencies": {
+    "circomlib": "^2.0.1",
+    "circomlibjs": "^0.0.8",
+    "hardhat-deploy": "^0.9.4",
+    "hardhat-deploy-ethers": "^0.3.0-beta.11",
+    "web3": "^1.5.2"
+  },
+  "devDependencies": {
+    "@libsem/identity": "^1.0.17",
+    "@libsem/protocols": "^1.0.23",
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@types/jest": "^27.0.2",
+    "chai": "^4.3.4",
+    "chai-ethers": "^0.0.1",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.4.6",
+    "hardhat": "^2.6.1",
+    "http-server": "^13.0.1",
+    "jest": "^27.3.1",
+    "snarkjs": "^0.4.7",
+    "ts-jest": "^27.0.7"
+  }
+}

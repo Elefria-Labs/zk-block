@@ -23,7 +23,6 @@ const StatusChecklist = (_: StatusChecklistPropsType) => {
         flex: '1',
         flexDirection: 'column',
         justifyContent: 'center',
-
         height: '100%',
         backgroundImage: `url(/assets/images/status-bg.svg)`,
         borderRadius: '14px',
@@ -34,7 +33,7 @@ const StatusChecklist = (_: StatusChecklistPropsType) => {
       <Box>
         {featureChecklist.map((item) => {
           return (
-            <Box display="flex" key={item} mb={2} alignItems="center">
+            <Box display="flex" key={item} marginY={1} alignItems="center">
               <CheckIcon color="success" fontSize="large" />
               <Title variant="h2" ml={4}>
                 {item}

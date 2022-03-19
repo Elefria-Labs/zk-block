@@ -1,0 +1,14 @@
+node_modules
+build
+zkeyFiles
+.env
+private.json
+
+#Hardhat files
+cache
+artifacts
+
+#Contracts
+contracts/Verifier.sol
+deployments/
+exports/

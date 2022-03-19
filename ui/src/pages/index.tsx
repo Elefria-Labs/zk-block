@@ -99,6 +99,7 @@ const Index = () => {
               <BaseButton variant="contained" disabled>
                 Try Demo
               </BaseButton>
+              <Typography variant="h6">* coming soon</Typography>
             </Box>
             <Box
               style={{
