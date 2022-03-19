@@ -1,5 +1,5 @@
-import firebase from 'firebase/app';
-import 'firebase/analytics';
+import { initializeApp } from 'firebase/app';
+import { initializeAnalytics } from 'firebase/analytics';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FB_API_KEY,
@@ -10,11 +10,10 @@ export const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FB_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FB_MEASUREMENT_ID,
 };
-// @ts-ignore
-if (!firebase?.apps?.length) {
-  firebase.initializeApp(firebaseConfig);
-}
 
-const analytics = (firebase as any).analytics;
+initializeApp(firebaseConfig);
 
-export { firebase as firebaseInstance, analytics };
+const app = initializeApp(firebaseConfig);
+initializeAnalytics(app);
+
+export { app as firebaseInstance };
