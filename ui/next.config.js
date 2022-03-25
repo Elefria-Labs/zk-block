@@ -4,7 +4,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   fs: false,
   fs: 'empty',
 });
-const withTM = require('next-transpile-modules')(['bigint-conversion']); // pass the modules you would like to see transpiled
+const withTM = require('next-transpile-modules')(); // pass the modules you would like to see transpiled
 const compose = require('next-compose');
 
 module.exports = compose([

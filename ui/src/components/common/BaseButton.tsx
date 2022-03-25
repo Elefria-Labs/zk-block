@@ -1,9 +1,12 @@
 import { styled, Button } from '@mui/material';
-
+export const maxButtonWidth = '160px';
+export const maxButtonHeight = '40px';
 const BaseButton = styled(Button)(({ theme }) => ({
-  // backgroundColor: theme.palette.primary.dark,
-  color: theme.palette.primary.light,
-  width: '160px',
+  backgroundColor: theme.palette.common.white,
+  color: theme.palette.common.black,
+  border: '2px solid black',
+  width: maxButtonWidth,
+  height: maxButtonHeight,
   cursor: 'pointer',
 }));
 

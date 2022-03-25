@@ -11,9 +11,10 @@ export const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FB_MEASUREMENT_ID,
 };
 
-initializeApp(firebaseConfig);
-
-const app = initializeApp(firebaseConfig);
-initializeAnalytics(app);
+let app;
+if (process.env.NODE_ENV == 'production') {
+  app = initializeApp(firebaseConfig);
+  initializeAnalytics(app);
+}
 
 export { app as firebaseInstance };
