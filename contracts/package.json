@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/heypran/zk-block.git#readme",
   "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
     "circomlib": "^2.0.1",
     "circomlibjs": "^0.0.8",
     "hardhat-deploy": "^0.9.4",
