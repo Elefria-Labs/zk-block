@@ -41,25 +41,24 @@ const Dapp = () => {
       <Box display="flex" flexDirection="row" justifyContent="center">
         <NavBar />
       </Box>
-      <Box display="flex" flexDirection="row" justifyContent="center">
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignContent="center"
+      >
         {/* Grid */}
         <Box
           style={{
             display: 'flex',
             flexGrow: '1',
             flexDirection: 'column',
-            alignContent: 'center',
+            alignSelf: 'center',
             maxWidth: '1080px',
+            border: '1px solid red',
           }}
         >
-          <Row mt={8}>
-            <Box
-              style={{
-                flexDirection: 'column',
-                flex: 0.5,
-                justifyContent: 'start',
-              }}
-            ></Box>
+          <Row mt={8} justifyContent="flex-end">
             <DynamicComponentWithNoSSR />
           </Row>
         </Box>

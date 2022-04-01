@@ -8,6 +8,10 @@ const BaseButton = styled(Button)(({ theme }) => ({
   width: maxButtonWidth,
   height: maxButtonHeight,
   cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
 }));
 
 export default BaseButton;

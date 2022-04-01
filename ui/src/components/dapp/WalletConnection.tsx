@@ -13,10 +13,7 @@ import BaseButton, {
   maxButtonWidth,
 } from '@components/common/BaseButton';
 
-import { networkConfig } from '@config/network';
-import { useWalletConnect } from '@hooks/useWalletConnect';
-
-const networkOptions = Object.values(networkConfig);
+import { networkOptions, useWalletConnect } from '@hooks/useWalletConnect';
 
 const WalletConnectComponent = () => {
   const {
@@ -43,11 +40,13 @@ const WalletConnectComponent = () => {
     }
   }, []);
 
+  // console.log(`networkOptions`, networkOptions);
   return (
     <Box
       style={{
         flexDirection: 'column',
         justifyContent: 'start',
+        border: '1px solid red',
       }}
     >
       <Box
@@ -71,11 +70,13 @@ const WalletConnectComponent = () => {
               fontSize: '10px',
             }}
           >
-            {networkOptions.map((network) => (
-              <MenuItem
-                value={network.chainId}
-              >{`${network.name} (${network.chainName})`}</MenuItem>
-            ))}
+            {networkOptions
+              .filter((network) => network.name.toLowerCase().includes('test'))
+              .map((network) => (
+                <MenuItem
+                  value={network.chainId}
+                >{`${network.name} (${network.chainName})`}</MenuItem>
+              ))}
           </Select>
         </FormControl>
         {!account ? (

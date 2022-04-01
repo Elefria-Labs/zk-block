@@ -32,7 +32,7 @@ export const networkConfig: Record<string, any> = {
     ],
   },
   '0x3': {
-    name: 'Ropsten',
+    name: 'Ropsten Testnet',
     title: 'Ethereum Testnet Ropsten',
     chainName: 'ETH',
     rpcUrls: [
@@ -140,7 +140,7 @@ export const networkConfig: Record<string, any> = {
     ],
   },
   '0x13881': {
-    name: 'Mumbai',
+    name: 'Polygon Testnet Mumbai',
     title: 'Polygon Testnet Mumbai',
     chainName: 'Polygon',
     rpcUrls: [
@@ -193,7 +193,7 @@ export const networkConfig: Record<string, any> = {
     ],
   },
   '0x61': {
-    name: 'Binance Smart Chain Testnet',
+    name: 'Binance Smart Chain',
     chainName: 'BSC',
     rpcUrls: [
       'https://data-seed-prebsc-1-s1.binance.org:8545',
@@ -214,6 +214,27 @@ export const networkConfig: Record<string, any> = {
         name: 'bscscan-testnet',
         url: 'https://testnet.bscscan.com',
         standard: 'EIP3091',
+      },
+    ],
+  },
+  '0x118': {
+    name: 'zkSync alpha testnet',
+    chainName: 'ZkSync',
+    rpcUrls: ['https://zksync2-testnet.zksync.dev'],
+    faucets: ['https://portal.zksync.io/bridge/faucet'],
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    infoURL: 'https://v2-docs.zksync.io/dev/testnet/important-links.html',
+    shortName: 'zksync',
+    chainId: 280,
+    networkId: 280,
+    blockExplorerUrls: [
+      {
+        name: 'ZkSync Block Explorer',
+        url: 'https://zksync2-testnet.zkscan.io/',
       },
     ],
   },

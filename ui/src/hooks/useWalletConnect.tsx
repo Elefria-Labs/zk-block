@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 
-const networkOptions = Object.values(networkConfig);
+export const networkOptions = Object.values(networkConfig);
 
 const providerOptions = {
   // walletconnect: {
@@ -72,7 +72,7 @@ export const useWalletConnect = () => {
   const refreshState = () => {
     setAccount('');
     setChainId(undefined);
-    setNetwork(undefined);
+    setNetwork(networkOptions?.[0].chainId);
   };
   const disconnect = async () => {
     await web3Modal.clearCachedProvider();
