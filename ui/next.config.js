@@ -29,8 +29,7 @@ module.exports = compose([
           stream: false,
           path: false,
           worker_threads: false,
-          // http:false,
-          // https:false,
+          crypto: require.resolve('crypto-browserify'),
           os: false,
         };
         // /https://github.com/ethers-io/ethers.js/issues/998

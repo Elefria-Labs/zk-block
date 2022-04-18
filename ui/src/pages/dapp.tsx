@@ -1,12 +1,15 @@
 import React from 'react';
-import { Typography, styled, Box } from '@mui/material';
+import { Typography, styled, Box, Grid, Paper } from '@mui/material';
 import dynamic from 'next/dynamic';
 
 import { Meta } from '@/layout/Meta';
 import { Main } from '@/templates/Main';
+import BaseButton from '@components/common/BaseButton';
 
 import Footer from '@components/home/Footer';
 import NavBar from '@components/home/Nav';
+import { generateBroadcastParams } from '@utils/ zk/zk-witness';
+import { ethers } from 'ethers';
 //import WalletConnectComponent from '@components/dapp/WalletConnect';
 
 //const contentHeight = `calc(100vh - ${navBarHeight} - ${footerHeight})`;
@@ -27,7 +30,13 @@ const Row = styled(Box)((_) => ({
   flexDirection: 'row',
   flex: 1,
 }));
-
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 const Dapp = () => {
   return (
     <Main
@@ -46,20 +55,51 @@ const Dapp = () => {
         flexDirection="column"
         justifyContent="center"
         alignContent="center"
+        style={{ maxWidth: '1080px' }}
       >
+        <Grid container spacing={2} border="1px solid red">
+          <Grid item xs={8}>
+            <Item>xs=8</Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item>xs=4</Item>
+          </Grid>
+          <Grid item xs={4}>
+            <Item>xs=4</Item>
+          </Grid>
+          <Grid item xs={8}>
+            <Item>xs=8</Item>
+          </Grid>
+        </Grid>
         {/* Grid */}
         <Box
           style={{
             display: 'flex',
             flexGrow: '1',
-            flexDirection: 'column',
+            flexDirection: 'row',
             alignSelf: 'center',
             maxWidth: '1080px',
             border: '1px solid red',
           }}
         >
-          <Row mt={8} justifyContent="flex-end">
+          <Row mt={8} justifyContent="flex-end" border="1px solid green">
             <DynamicComponentWithNoSSR />
+          </Row>
+          <Row mt={8} justifyContent="flex-end">
+            <BaseButton
+              variant="contained"
+              onClick={async () => {
+                const callData = await generateBroadcastParams({
+                  ...{
+                    ageLimit: 18,
+                    age: 21, // ethers.BigNumber.from(22).toBigInt(),
+                  },
+                });
+                console.log('callData', callData);
+              }}
+            >
+              Verify Age
+            </BaseButton>
           </Row>
         </Box>
       </Box>
