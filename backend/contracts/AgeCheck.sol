@@ -13,10 +13,10 @@ interface IVerifier {
 
 contract AgeCheck{
 
-    event AgeVerfied(address person,bool verfied);
+    event AgeVerfied(address person, bool verfied);
 
     IVerifier zkVerfier;    
-    
+    mapping(address=>bool) addressMapping;
     constructor(address _verifier) {
         zkVerfier =IVerifier(_verifier);
     }
@@ -27,9 +27,17 @@ contract AgeCheck{
         [[_proof[2], _proof[3]], [_proof[4], _proof[5]]],
         [_proof[6], _proof[7]],
         _input
-        ),"Below Age limit");
-  
+        ),"Below Age limit");  
+        addressMapping[msg.sender]=true;
        emit AgeVerfied(msg.sender,true);
-       
+    }
+
+    function getVerficationStatus(address _user) public view returns (bool){
+      return addressMapping[_user];
+    }
+    
+    function setVerficationStatus(bool _status) public{
+      addressMapping[msg.sender]=false;
+      emit AgeVerfied(msg.sender,false);
     }
 }

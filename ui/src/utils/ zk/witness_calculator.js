@@ -1,3 +1,6 @@
+/* eslint-disable */
+const { ethers } = require('ethers');
+
 module.exports = async function builder(code, options) {
   options = options || {};
 
@@ -93,25 +96,22 @@ class WitnessCalculator {
     //input is assumed to be a map from signals to arrays of bigints
     this.instance.exports.init(this.sanityCheck || sanityCheck ? 1 : 0);
     const keys = Object.keys(input);
-    console.log('keys------->', input);
     var input_counter = 0;
     keys.forEach((k) => {
       const h = fnvHash(k);
       const hMSB = parseInt(h.slice(0, 8), 16);
       const hLSB = parseInt(h.slice(8, 16), 16);
       const fArr = flatArray(input[k]);
-      console.log('farr', fArr);
       for (let i = 0; i < fArr.length; i++) {
         const arrFr = toArray32(fArr[i], this.n32);
         for (let j = 0; j < this.n32; j++) {
           this.instance.exports.writeSharedRWMemory(j, arrFr[this.n32 - 1 - j]);
         }
         try {
-          console.log('hMSB', hMSB, hLSB, i);
           this.instance.exports.setInputSignal(hMSB, hLSB, i);
           input_counter++;
         } catch (err) {
-          console.log(`After adding signal ${i} of ${k}`);
+          // console.log(`After adding signal ${i} of ${k}`);
           throw new Error(err);
         }
       }
@@ -267,7 +267,7 @@ function flatArray(a) {
 }
 
 function fnvHash(str) {
-  const uint64_max = BigInt(2) ** BigInt(64);
+  const uint64_max = 18446744073709551616n;
   let hash = BigInt('0xCBF29CE484222325');
   for (var i = 0; i < str.length; i++) {
     hash ^= BigInt(str[i].charCodeAt());

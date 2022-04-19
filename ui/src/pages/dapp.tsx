@@ -1,22 +1,27 @@
-import React from 'react';
-import { Typography, styled, Box, Grid, Paper } from '@mui/material';
+import React, { useEffect } from 'react';
+import {
+  Typography,
+  styled,
+  Box,
+  IconButton,
+  Collapse,
+  Paper,
+  TextField,
+} from '@mui/material';
 import dynamic from 'next/dynamic';
 
 import { Meta } from '@/layout/Meta';
 import { Main } from '@/templates/Main';
 import BaseButton from '@components/common/BaseButton';
-
+import CloseIcon from '@mui/icons-material/Close';
 import Footer from '@components/home/Footer';
 import NavBar from '@components/home/Nav';
 import { generateBroadcastParams } from '@utils/ zk/zk-witness';
-import { ethers } from 'ethers';
-//import WalletConnectComponent from '@components/dapp/WalletConnect';
-
-//const contentHeight = `calc(100vh - ${navBarHeight} - ${footerHeight})`;
-
-const Title = styled(Typography)((_) => ({
-  color: 'black',
-}));
+import { textFieldStyle } from '@components/common/BaseTextField';
+import { getAgeCheckContract } from '@hooks/contractHelpers';
+import { useWalletConnect } from '@hooks/useWalletConnect';
+import BaseAlert from '@components/common/BaseAlert';
+import { truncateAddress } from '@utils/wallet';
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import('../components/dapp/WalletConnection'),
@@ -30,14 +35,36 @@ const Row = styled(Box)((_) => ({
   flexDirection: 'row',
   flex: 1,
 }));
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
+
 const Dapp = () => {
+  const [age, setAge] = React.useState<number>(19);
+  const [error, setError] = React.useState<string | undefined>();
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [ageVerified, setAgeVerified] = React.useState<boolean>(false);
+  const { chainId, provider, account } = useWalletConnect();
+  const ageCheckContract = getAgeCheckContract(chainId ?? 1666700000);
+
+  ageCheckContract.on('AgeVerfied', (event) => {
+    console.log('received event', event);
+    setOpen(true);
+    setAgeVerified(true);
+  });
+
+  const getAgeVerificationStatus = async () => {
+    console.log(`getAgeVerificationStatus`);
+    if (account == null) {
+      return;
+    }
+    const age = await ageCheckContract.getVerficationStatus(account);
+
+    if (age) {
+      setAgeVerified(true);
+    }
+  };
+  useEffect(() => {
+    getAgeVerificationStatus();
+  }, [account]);
+
   return (
     <Main
       meta={
@@ -50,57 +77,157 @@ const Dapp = () => {
       <Box display="flex" flexDirection="row" justifyContent="center">
         <NavBar />
       </Box>
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignContent="center"
-        style={{ maxWidth: '1080px' }}
-      >
-        <Grid container spacing={2} border="1px solid red">
-          <Grid item xs={8}>
-            <Item>xs=8</Item>
-          </Grid>
-          <Grid item xs={4}>
-            <Item>xs=4</Item>
-          </Grid>
-          <Grid item xs={4}>
-            <Item>xs=4</Item>
-          </Grid>
-          <Grid item xs={8}>
-            <Item>xs=8</Item>
-          </Grid>
-        </Grid>
-        {/* Grid */}
+      <Box display="flex" flexDirection="row" flex="1" justifyContent="center">
         <Box
-          style={{
-            display: 'flex',
-            flexGrow: '1',
-            flexDirection: 'row',
-            alignSelf: 'center',
-            maxWidth: '1080px',
-            border: '1px solid red',
-          }}
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignContent="center"
+          style={{ maxWidth: '1080px' }}
         >
-          <Row mt={8} justifyContent="flex-end" border="1px solid green">
-            <DynamicComponentWithNoSSR />
-          </Row>
-          <Row mt={8} justifyContent="flex-end">
-            <BaseButton
-              variant="contained"
-              onClick={async () => {
-                const callData = await generateBroadcastParams({
-                  ...{
-                    ageLimit: 18,
-                    age: 21, // ethers.BigNumber.from(22).toBigInt(),
-                  },
-                });
-                console.log('callData', callData);
+          {/* Grid */}
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignSelf: 'center',
+              maxWidth: '1080px',
+              minHeight: '720px',
+              minWidth: '1080px',
+            }}
+          >
+            <Box>
+              <DynamicComponentWithNoSSR />
+            </Box>
+            <Box display="flex" flexDirection="row" justifyContent="center">
+              <Collapse
+                in={open}
+                sx={{ margin: 0, padding: 0, width: '300px' }}
+              >
+                <BaseAlert
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                  severity="success"
+                  sx={{ mb: 2 }}
+                >
+                  Verfied
+                </BaseAlert>
+              </Collapse>
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignContent: 'center',
+                marginBottom: '16px',
               }}
             >
-              Verify Age
-            </BaseButton>
-          </Row>
+              <Typography mb="8px" variant="h2">
+                Age verification using Zero Knowledge Proofs.
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignContent: 'center',
+                marginBottom: '16px',
+              }}
+            >
+              <Paper
+                elevation={3}
+                sx={{
+                  height: '140px',
+                  width: '300px',
+                  backgroundColor: '#D0CDD7',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  padding: '8px',
+                }}
+              >
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                >
+                  {account && (
+                    <Typography mb="8px">
+                      Age for<b> {truncateAddress(account) ?? ''} </b>{' '}
+                      {ageVerified ? 'is above 18.' : 'not verified.'}
+                    </Typography>
+                  )}
+                  <BaseButton
+                    variant="contained"
+                    onClick={async () => {
+                      try {
+                        await ageCheckContract
+                          .connect(provider.getSigner())
+                          .setVerficationStatus(false);
+                        setAgeVerified(false);
+                      } catch (e) {
+                        setError(
+                          'Failed to generate proof, possibly age not valid.',
+                        );
+                        console.log('Err:', e);
+                      }
+                    }}
+                  >
+                    Reset
+                  </BaseButton>
+                </Box>
+              </Paper>
+            </Box>
+
+            <Row justifyContent="center" alignItems="flex-start">
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                value={age}
+                type="number"
+                onChange={(e) => setAge(Number(e.target.value ?? 0))}
+                error={!!error}
+                helperText={!!error && error}
+                style={{ marginRight: '8px' }}
+                inputProps={{ style: textFieldStyle }}
+              />
+              <BaseButton
+                variant="contained"
+                onClick={async () => {
+                  try {
+                    const [a, b, c, input] = await generateBroadcastParams({
+                      ...{
+                        ageLimit: 18,
+                        age,
+                      },
+                    });
+                    setError(undefined);
+                    const proof = [...a, ...b[0], ...b[1], ...c];
+                    await ageCheckContract
+                      .connect(provider.getSigner())
+                      .verifyAge(proof, input);
+                  } catch (e) {
+                    setError(
+                      'Failed to generate proof, possibly age not valid.',
+                    );
+                    console.log('Err:', e);
+                  }
+                }}
+              >
+                Verify Age
+              </BaseButton>
+            </Row>
+          </Box>
         </Box>
       </Box>
 

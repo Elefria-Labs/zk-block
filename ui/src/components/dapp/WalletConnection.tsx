@@ -1,24 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   FormControl,
   MenuItem,
-  InputLabel,
-  Select,
   Typography,
+  TextField,
 } from '@mui/material';
-
-import BaseButton, {
-  maxButtonHeight,
-  maxButtonWidth,
-} from '@components/common/BaseButton';
+import BaseButton, { maxButtonWidth } from '@components/common/BaseButton';
 
 import { networkOptions, useWalletConnect } from '@hooks/useWalletConnect';
+import { truncateAddress } from '@utils/wallet';
+import { textFieldStyle } from '@components/common/BaseTextField';
 
 const WalletConnectComponent = () => {
   const {
-    provider,
-    network,
     account,
     chainId,
     connectWallet,
@@ -35,64 +30,66 @@ const WalletConnectComponent = () => {
   };
 
   React.useEffect(() => {
-    if (web3Modal.cachedProvider) {
+    if (web3Modal && web3Modal.cachedProvider) {
       connectWallet();
     }
   }, []);
 
-  // console.log(`networkOptions`, networkOptions);
   return (
     <Box
       style={{
+        display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'start',
-        border: '1px solid red',
+        alignItems: 'flex-end',
+        height: '140px',
       }}
     >
       <Box
         style={{
           display: 'flex',
-          justifyContent: 'start',
+          justifyContent: 'flex-end',
         }}
       >
-        <FormControl fullWidth>
-          <InputLabel id="network-select-label">Network</InputLabel>
-          <Select
-            labelId="network-select-label"
+        <FormControl style={{ width: maxButtonWidth }}>
+          {/* <InputLabel id="network-select-label">Network</InputLabel> */}
+          <TextField
+            select
             id="network-select"
             value={chainId}
-            label="Network"
             onChange={handleNetworkSelect}
-            sx={{
-              border: '2px solid black',
-              maxWidth: maxButtonWidth,
-              maxHeight: maxButtonHeight,
-              fontSize: '10px',
+            margin="none"
+            inputProps={{
+              style: { ...textFieldStyle, padding: 0 },
             }}
           >
             {networkOptions
               .filter((network) => network.name.toLowerCase().includes('test'))
               .map((network) => (
                 <MenuItem
+                  key={`${network.chainId}`}
                   value={network.chainId}
                 >{`${network.name} (${network.chainName})`}</MenuItem>
               ))}
-          </Select>
+          </TextField>
         </FormControl>
-        {!account ? (
-          <BaseButton variant="contained" onClick={connectWallet}>
-            Connect Wallet
-          </BaseButton>
-        ) : (
-          <BaseButton variant="contained" onClick={disconnect}>
-            Disconnect
-          </BaseButton>
-        )}
+        <Box ml="8px">
+          {!account ? (
+            <BaseButton variant="contained" onClick={connectWallet}>
+              Connect Wallet
+            </BaseButton>
+          ) : (
+            <BaseButton variant="contained" onClick={disconnect}>
+              Disconnect
+            </BaseButton>
+          )}
+        </Box>
       </Box>
-      <Typography>{`Account: ${account ?? ''}`}</Typography>
-      <Typography>{`Network ID: ${
-        chainId ? chainId : 'No Network'
-      }`}</Typography>
+      {account && (
+        <>
+          <Typography>{`Account: ${truncateAddress(account)}`}</Typography>
+          <Typography>{`Network ID: ${chainId ?? 'No Network'}`}</Typography>
+        </>
+      )}
     </Box>
   );
 };

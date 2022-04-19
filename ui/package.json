@@ -10,7 +10,7 @@
     "export:dev": "env-cmd -f env/.env.development next export",
     "build:production": "env-cmd -f env/.env.production next build",
     "export:prod": "env-cmd -f env/.env.production next export",
-    "build:development": "env-cmd -f env/.env.development next build",
+    "build:dev": "env-cmd -f env/.env.development next build",
     "clean": "rimraf .next out",
     "lint": "next lint",
     "build-types": "tsc --noEmit --pretty",

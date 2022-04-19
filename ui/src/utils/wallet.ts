@@ -1,5 +1,3 @@
-// Set of helper functions to facilitate wallet setup
-
 import { nodes } from './getRpcUrl';
 import { chainId, chainName } from './web3react';
 

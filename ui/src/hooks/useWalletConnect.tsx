@@ -1,6 +1,6 @@
+import { useState, useEffect } from 'react';
 import { networkConfig } from '@config/network';
 import { toHex } from '@utils/wallet';
-import React, { useState, useEffect } from 'react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 
@@ -15,33 +15,51 @@ const providerOptions = {
   // },
 };
 
-const web3Modal = new Web3Modal({
-  cacheProvider: true, // optional
-  providerOptions, // required
-});
+export const useWalletModal = () => {
+  const hasWindow = typeof window !== 'undefined';
+  const [web3Modal, setWeb3Modal] = useState<Web3Modal | undefined>();
+  useEffect(() => {
+    if (hasWindow) {
+      setWeb3Modal(
+        new Web3Modal({
+          cacheProvider: true, // optional
+          providerOptions, // required
+        }),
+      );
+    }
+  }, [hasWindow]);
+
+  return web3Modal;
+};
 
 export const useWalletConnect = () => {
+  const [web3ModalProvider, setWeb3ModalProvider] = useState<any>();
   const [provider, setProvider] = useState<any>();
-  const [library, setLibrary] = useState<any>();
   const [account, setAccount] = useState<string | undefined>();
-
   const [error, setError] = useState('');
   const [chainId, setChainId] = useState<number | undefined>();
   const [network, setNetwork] = useState<number>(networkOptions[0]?.chainId);
 
-  const connectWallet = async () => {
-    try {
-      const provider = await web3Modal.connect();
-      const library = new ethers.providers.Web3Provider(provider);
+  let web3Modal: Web3Modal | undefined = useWalletModal();
 
-      const accounts = await library.listAccounts();
-      const network = await library.getNetwork();
+  const connectWallet = async () => {
+    if (web3Modal == null) {
+      return;
+    }
+    try {
+      const web3ModalProvider = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(web3ModalProvider);
+
+      const accounts = await provider.listAccounts();
+      const network = await provider.getNetwork();
+      setWeb3ModalProvider(web3ModalProvider);
       setProvider(provider);
-      setLibrary(library);
-      if (accounts) setAccount(accounts[0]);
+      if (accounts) {
+        setAccount(accounts[0]);
+      }
       setChainId(network.chainId);
     } catch (error) {
-      setError(error);
+      setError('Error connecting to wallet.');
     }
   };
 
@@ -51,20 +69,20 @@ export const useWalletConnect = () => {
     }
 
     try {
-      await library.provider.request({
+      await provider.provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: toHex(network) }],
       });
       connectWallet();
     } catch (switchError) {
-      if (switchError.code === 4902) {
+      if ((switchError as any).code === 4902) {
         try {
-          await library.provider.request({
+          await provider.provider.request({
             method: 'wallet_addEthereumChain',
             params: [networkConfig[toHex(network)]],
           });
         } catch (error) {
-          setError(error);
+          setError('Error swtich wallet.');
         }
       }
     }
@@ -75,16 +93,14 @@ export const useWalletConnect = () => {
     setNetwork(networkOptions?.[0].chainId);
   };
   const disconnect = async () => {
+    if (web3Modal == null) {
+      return;
+    }
     await web3Modal.clearCachedProvider();
     refreshState();
   };
 
-  useEffect(() => {
-    if (web3Modal.cachedProvider) {
-      connectWallet();
-    }
-  }, []);
-
+  // @ts-ignore
   useEffect(() => {
     if (provider == null || provider?.on == null) {
       return;
@@ -120,13 +136,14 @@ export const useWalletConnect = () => {
   }, [provider]);
 
   useEffect(() => {
-    if (web3Modal.cachedProvider) {
+    if (web3Modal && web3Modal.cachedProvider) {
       connectWallet();
     }
-  }, []);
+  }, [web3Modal]);
 
   return {
     provider,
+    web3ModalProvider,
     account,
     network,
     chainId,

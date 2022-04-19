@@ -775,11 +775,6 @@
     "@types/sinon-chai" "^3.2.3"
     "@types/web3" "1.0.19"
 
-"@openzeppelin/contracts@^4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.4.2.tgz#4e889c9c66e736f7de189a53f8ba5b8d789425c2"
-  integrity sha512-NyJV7sJgoGYqbtNUWgzzOGW4T6rR19FmX1IJgXGdapGPWsuMelGJn9h03nos0iqfforCbCB0iYIR0MtIuIFLLw==
-
 "@resolver-engine/core@^0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@resolver-engine/core/-/core-0.3.3.tgz#590f77d85d45bc7ecc4e06c654f41345db6ca967"
@@ -1310,11 +1305,6 @@
     circomlibjs "0.0.8"
     ffjavascript "0.2.38"
     js-sha256 "^0.9.0"
-
-"@zk-kit/incremental-merkle-tree.sol@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@zk-kit/incremental-merkle-tree.sol/-/incremental-merkle-tree.sol-0.3.0.tgz#0b9877b4aa30d00487eb01fcb9f832fdb562eae7"
-  integrity sha512-amRcQL49FmFI1N4PeZIue0VoJFfju/RCSWM2pUoRDOdFYoYB4cafBQXU4yjnb5VtNhkg4NwDJ42KCIrUNTQofQ==
 
 "@zk-kit/incremental-merkle-tree@^0.4.2":
   version "0.4.2"
