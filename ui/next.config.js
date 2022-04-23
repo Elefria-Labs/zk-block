@@ -4,7 +4,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   fs: false,
   fs: 'empty',
 });
-const withTM = require('next-transpile-modules')(['bigint-conversion']); // pass the modules you would like to see transpiled
+const withTM = require('next-transpile-modules')(); // pass the modules you would like to see transpiled
 const compose = require('next-compose');
 
 module.exports = compose([
@@ -29,8 +29,7 @@ module.exports = compose([
           stream: false,
           path: false,
           worker_threads: false,
-          // http:false,
-          // https:false,
+          crypto: require.resolve('crypto-browserify'),
           os: false,
         };
         // /https://github.com/ethers-io/ethers.js/issues/998

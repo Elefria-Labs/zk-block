@@ -75,7 +75,8 @@
         "no-await-in-loop": "off",
         "no-plusplus": "off",
         "prefer-template": "off",
-        "no-useless-concat": "off"
+        "no-useless-concat": "off",
+        "newline-after-import": "off"
       }
     }
   ]

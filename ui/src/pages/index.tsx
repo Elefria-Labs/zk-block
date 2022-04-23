@@ -11,6 +11,7 @@ import DescriptionBlock2, {
 import StatusChecklist from '@components/home/StatusChecklist';
 import Footer from '@components/home/Footer';
 import NavBar from '@components/home/Nav';
+import Link from 'next/link';
 
 //const contentHeight = `calc(100vh - ${navBarHeight} - ${footerHeight})`;
 
@@ -95,11 +96,9 @@ const Index = () => {
               <Title variant="h2" my={8}>
                 Focus on Building
               </Title>
-
-              <BaseButton variant="contained" disabled>
-                Try Demo
-              </BaseButton>
-              <Typography variant="h6">* coming soon</Typography>
+              <Link href="/dapp">
+                <BaseButton variant="contained">Try Demo</BaseButton>
+              </Link>
             </Box>
             <Box
               style={{

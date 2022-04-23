@@ -1,3 +1,9 @@
-export const contractAddress = '0xae69Afd517bbD01b6aee7e104106888b4E9654B8';
 export const githubLink = 'https://github.com/heypran/zk-block';
 export const twitterLink = 'https://twitter.com/zkblock_app';
+
+export const contractAddresses: Record<string, Record<string, string>> = {
+  ageCheck: {
+    '1666600000': '0xF8529494aF8Adf4e96A937BfeaFca8EaBB533892',
+    '1666700000': '0xF8529494aF8Adf4e96A937BfeaFca8EaBB533892',
+  },
+};
