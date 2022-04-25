@@ -1,8 +1,8 @@
 import { Contract } from "ethers"
 import { task, types } from "hardhat/config"
 
-task("deploy:ageCheck", "Deploy a Verifier contract")
-  .addOptionalParam<boolean>("logs", "Print the logs", true, types.boolean)
+task("deploy:ageCheck", "Deploy a AgeCheck & its Verifier contract")
+  .addOptionalParam<boolean>("logs", "Logs ", true, types.boolean)
   .setAction(async ({ logs }, { ethers }): Promise<Contract> => {
     const Verifier = await ethers.getContractFactory("Verifier")
     const ContractFactory = await ethers.getContractFactory("AgeCheck")
