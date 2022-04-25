@@ -10,7 +10,7 @@ The current sample zk-dapp has an age verification circuit.
 Run the following command on your local environment:
 
 ```
-git clone
+git clone https://github.com/heypran/zk-block.git
 
 cd zk-block
 
