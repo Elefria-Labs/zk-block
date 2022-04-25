@@ -5,6 +5,12 @@ The current sample zk-dapp has an age verification circuit.
 
 ### Getting started
 
+#### Pre-Requisite
+
+Install [rust](https://www.rust-lang.org/tools/install)
+Install [circom](https://docs.circom.io/getting-started/installation/)
+Install [nodejs](https://nodejs.org/en/download/)
+
 #### Frontend / UI
 
 Run the following command on your local environment:
