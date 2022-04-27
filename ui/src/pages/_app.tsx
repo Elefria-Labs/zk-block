@@ -1,9 +1,10 @@
 import React from 'react';
-import { AppProps } from 'next/app';
+
 import { ThemeProvider } from '@mui/material/styles';
-import Providers from '../utils/Providers';
+import { AppProps } from 'next/app';
 
 import themes from '../themes';
+import Providers from '../utils/Providers';
 import '../styles/global.css';
 import '@firebase/firebase-config';
 

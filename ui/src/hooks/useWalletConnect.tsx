@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+
 import { networkConfig } from '@config/network';
 import { toHex } from '@utils/wallet';
-import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
+import Web3Modal from 'web3modal';
 
 export const networkOptions = Object.values(networkConfig);
 
@@ -40,30 +41,30 @@ export const useWalletConnect = () => {
   const [chainId, setChainId] = useState<number | undefined>();
   const [network, setNetwork] = useState<number>(networkOptions[0]?.chainId);
 
-  let web3Modal: Web3Modal | undefined = useWalletModal();
+  const web3Modal: Web3Modal | undefined = useWalletModal();
 
   const connectWallet = async () => {
     if (web3Modal == null) {
       return;
     }
     try {
-      const web3ModalProvider = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(web3ModalProvider);
+      const modalProvider = await web3Modal.connect();
+      const web3provider = new ethers.providers.Web3Provider(modalProvider);
 
-      const accounts = await provider.listAccounts();
-      const network = await provider.getNetwork();
-      setWeb3ModalProvider(web3ModalProvider);
-      setProvider(provider);
+      const accounts = await web3provider.listAccounts();
+      const providerNetwork = await web3provider.getNetwork();
+      setWeb3ModalProvider(modalProvider);
+      setProvider(web3provider);
       if (accounts) {
         setAccount(accounts[0]);
       }
-      setChainId(network.chainId);
+      setChainId(providerNetwork.chainId);
     } catch (error) {
       setError('Error connecting to wallet.');
     }
   };
 
-  const switchNetwork = async (network: number) => {
+  const switchNetwork = async (network?: number) => {
     if (network == null) {
       return;
     }

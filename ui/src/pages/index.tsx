@@ -1,19 +1,17 @@
 import React from 'react';
-import { Typography, styled, Box } from '@mui/material';
 
-import { Meta } from '@/layout/Meta';
-import { Main } from '@/templates/Main';
 import BaseButton from '@components/common/BaseButton';
 import DescriptionBlock from '@components/home/DescriptionBlock';
 import DescriptionBlock2, {
   FeatureType,
 } from '@components/home/DescriptionBlock2';
-import StatusChecklist from '@components/home/StatusChecklist';
 import Footer from '@components/home/Footer';
 import NavBar from '@components/home/Nav';
+import StatusChecklist from '@components/home/StatusChecklist';
+import { Meta } from '@layout/Meta';
+import { Typography, styled, Box } from '@mui/material';
+import { Main } from '@templates/Main';
 import Link from 'next/link';
-
-//const contentHeight = `calc(100vh - ${navBarHeight} - ${footerHeight})`;
 
 const Title = styled(Typography)((_) => ({
   color: 'black',
@@ -96,7 +94,7 @@ const Index = () => {
               <Title variant="h2" my={8}>
                 Focus on Building
               </Title>
-              <Link href="/dapp">
+              <Link href="/dapp" passHref>
                 <BaseButton variant="contained">Try Demo</BaseButton>
               </Link>
             </Box>
@@ -134,12 +132,14 @@ const Index = () => {
                 <img
                   src={`../../assets/images/next-js-logo.svg`}
                   style={{ height: '140px', width: 'auto' }}
+                  alt="zk-block, boilerplate for zero knowledge dapps"
                 />
               </Box>
               <Box display="flex" justifyContent="flex-end">
                 <img
                   src={`../../assets/images/mui.svg`}
                   style={{ height: '140px', width: 'auto' }}
+                  alt="zk-block, boilerplate for zero knowledge dapps"
                 />
               </Box>
             </Box>
@@ -158,6 +158,7 @@ const Index = () => {
               <img
                 src={`../../assets/images/wallets/metamask.svg`}
                 style={{ height: '240px', width: '240px' }}
+                alt="zk-block, boilerplate for zero knowledge dapps"
               />
             </Box>
             <Box
@@ -199,6 +200,7 @@ const Index = () => {
                         height: '80px',
                         width: 'auto',
                       }}
+                      alt="zk-block, boilerplate for zero knowledge dapps"
                     />
                     <Box display="flex" justifyContent="flex-end">
                       <Title sx={{ fontSize: '60px' }}>SnarkJS</Title>
