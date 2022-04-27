@@ -18,7 +18,7 @@ Run the following command on your local environment:
 ```
 git clone https://github.com/heypran/zk-block.git
 
-cd zk-block
+cd zk-block/ui
 
 yarn install
 
@@ -34,7 +34,12 @@ Open http://localhost:3000 with your favorite browser to see your project.
 
 ### Backend ( Smart Contracts & Circuits)
 
-Create a file `private.json` ( refer `private.example.json` ) and add your private key.
+Create a file `private.json` ( refer `private.example.json` ) inside `backend` folder and add your private key.
+
+##### Install deps
+
+`cd zk-block/backend`
+`yarn install`
 
 ##### Compile contracts
 

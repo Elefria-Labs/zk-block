@@ -2,7 +2,12 @@
 
 ### Getting started
 
-Create a file `private.json` ( refer `private.example.json` ) and add your private key.
+Create a file `private.json` ( refer `private.example.json` ) inside `backend` folder and add your private key.
+
+##### Install deps
+
+`cd zk-block/backend`
+`yarn install`
 
 ##### Compile contracts
 
