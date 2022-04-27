@@ -1,8 +1,8 @@
 import { ethers } from 'ethers';
 
-import AgeCheckContract from './../abi/AgeCheck.json';
-import { getAgeCheckAddress } from './addressHelpers';
+import AgeCheckContract from '../abi/AgeCheck.json';
 import { AgeCheck } from '../types/contracts/AgeCheck';
+import { getAgeCheckAddress } from './addressHelpers';
 
 export const getRpcUrlByChainId = (_: number): string => {
   // TODO

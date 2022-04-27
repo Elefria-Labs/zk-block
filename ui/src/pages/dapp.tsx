@@ -1,4 +1,14 @@
 import React, { useEffect } from 'react';
+
+import BaseAlert from '@components/common/BaseAlert';
+import BaseButton from '@components/common/BaseButton';
+import { textFieldStyle } from '@components/common/BaseTextField';
+import Footer from '@components/home/Footer';
+import NavBar from '@components/home/Nav';
+import { getAgeCheckContract } from '@hooks/contractHelpers';
+import { useWalletConnect } from '@hooks/useWalletConnect';
+import { Meta } from '@layout/Meta';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Typography,
   styled,
@@ -8,20 +18,10 @@ import {
   Paper,
   TextField,
 } from '@mui/material';
-import dynamic from 'next/dynamic';
-
-import { Meta } from '@/layout/Meta';
-import { Main } from '@/templates/Main';
-import BaseButton from '@components/common/BaseButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Footer from '@components/home/Footer';
-import NavBar from '@components/home/Nav';
+import { Main } from '@templates/Main';
 import { generateBroadcastParams } from '@utils/ zk/zk-witness';
-import { textFieldStyle } from '@components/common/BaseTextField';
-import { getAgeCheckContract } from '@hooks/contractHelpers';
-import { useWalletConnect } from '@hooks/useWalletConnect';
-import BaseAlert from '@components/common/BaseAlert';
 import { truncateAddress } from '@utils/wallet';
+import dynamic from 'next/dynamic';
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import('../components/dapp/WalletConnection'),
@@ -44,14 +44,12 @@ const Dapp = () => {
   const { chainId, provider, account } = useWalletConnect();
   const ageCheckContract = getAgeCheckContract(chainId ?? 1666700000);
 
-  ageCheckContract.on('AgeVerfied', (event) => {
-    console.log('received event', event);
+  ageCheckContract.on('AgeVerfied', (_: string) => {
     setOpen(true);
     setAgeVerified(true);
   });
 
   const getAgeVerificationStatus = async () => {
-    console.log(`getAgeVerificationStatus`);
     if (account == null) {
       return;
     }

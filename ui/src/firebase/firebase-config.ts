@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
 import { initializeAnalytics } from 'firebase/analytics';
+import { initializeApp, FirebaseApp } from 'firebase/app';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FB_API_KEY,
@@ -11,10 +11,8 @@ export const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FB_MEASUREMENT_ID,
 };
 
-let app;
-if (process.env.NODE_ENV == 'production') {
+let app: FirebaseApp | undefined;
+if (process.env.NODE_ENV === 'production') {
   app = initializeApp(firebaseConfig);
   initializeAnalytics(app);
 }
-
-export { app as firebaseInstance };
