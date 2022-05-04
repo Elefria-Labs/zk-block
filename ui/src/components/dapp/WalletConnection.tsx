@@ -1,4 +1,8 @@
 import React from 'react';
+
+import BaseButton, { maxButtonWidth } from '@components/common/BaseButton';
+import { textFieldStyle } from '@components/common/BaseTextField';
+import { networkOptions, useWalletConnect } from '@hooks/useWalletConnect';
 import {
   Box,
   FormControl,
@@ -6,11 +10,7 @@ import {
   Typography,
   TextField,
 } from '@mui/material';
-import BaseButton, { maxButtonWidth } from '@components/common/BaseButton';
-
-import { networkOptions, useWalletConnect } from '@hooks/useWalletConnect';
 import { truncateAddress } from '@utils/wallet';
-import { textFieldStyle } from '@components/common/BaseTextField';
 
 const WalletConnectComponent = () => {
   const {
@@ -24,7 +24,6 @@ const WalletConnectComponent = () => {
   } = useWalletConnect();
 
   const handleNetworkSelect = (event: any) => {
-    console.log(`event.target.value`, event.target.value);
     setNetwork(event.target.value);
     switchNetwork(event.target.value);
   };
@@ -55,7 +54,7 @@ const WalletConnectComponent = () => {
           <TextField
             select
             id="network-select"
-            value={chainId}
+            value={chainId?.toString()}
             onChange={handleNetworkSelect}
             margin="none"
             inputProps={{
@@ -68,6 +67,7 @@ const WalletConnectComponent = () => {
                 <MenuItem
                   key={`${network.chainId}`}
                   value={network.chainId}
+                  disabled={network.chainId?.toString() !== '1666700000'}
                 >{`${network.name} (${network.chainName})`}</MenuItem>
               ))}
           </TextField>

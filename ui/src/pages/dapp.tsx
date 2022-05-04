@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import BaseAlert from '@components/common/BaseAlert';
 import BaseButton from '@components/common/BaseButton';
@@ -44,24 +44,30 @@ const Dapp = () => {
   const { chainId, provider, account } = useWalletConnect();
   const ageCheckContract = getAgeCheckContract(chainId ?? 1666700000);
 
-  ageCheckContract.on('AgeVerfied', (_: string) => {
-    setOpen(true);
-    setAgeVerified(true);
-  });
-
-  const getAgeVerificationStatus = async () => {
-    if (account == null) {
+  useEffect(() => {
+    if (ageCheckContract == null) {
       return;
     }
-    const age = await ageCheckContract.getVerficationStatus(account);
+    ageCheckContract.on('AgeVerfied', (_: string) => {
+      setOpen(true);
+      setAgeVerified(true);
+    });
+  }, [ageCheckContract]);
 
-    if (age) {
+  const getAgeVerificationStatus = useCallback(async () => {
+    if (account == null || ageCheckContract == null) {
+      return;
+    }
+    const isVerified = await ageCheckContract.getVerficationStatus(account);
+
+    if (isVerified) {
       setAgeVerified(true);
     }
-  };
+  }, [ageCheckContract, account]);
+
   useEffect(() => {
     getAgeVerificationStatus();
-  }, [account]);
+  }, [account, getAgeVerificationStatus]);
 
   return (
     <Main
@@ -168,6 +174,9 @@ const Dapp = () => {
                   <BaseButton
                     variant="contained"
                     onClick={async () => {
+                      if (ageCheckContract == null) {
+                        return;
+                      }
                       try {
                         await ageCheckContract
                           .connect(provider.getSigner())
@@ -202,6 +211,9 @@ const Dapp = () => {
               <BaseButton
                 variant="contained"
                 onClick={async () => {
+                  if (ageCheckContract == null) {
+                    return;
+                  }
                   try {
                     const [a, b, c, input] = await generateBroadcastParams({
                       ...{

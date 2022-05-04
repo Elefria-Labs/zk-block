@@ -16,13 +16,17 @@ export const getRpcProviderByChainId = (chainId: number) => {
 
 const getContract = (abi: any, address: string, chainId: number) => {
   const signerOrProvider = getRpcProviderByChainId(chainId);
+
   return new ethers.Contract(address, abi, signerOrProvider);
 };
 
 export const getAgeCheckContract = (chainId: number) => {
-  return getContract(
-    AgeCheckContract.abi,
-    getAgeCheckAddress(chainId),
-    chainId,
-  ) as AgeCheck;
+  try {
+    const contractAddr = getAgeCheckAddress(chainId);
+
+    return getContract(AgeCheckContract.abi, contractAddr, chainId) as AgeCheck;
+  } catch (e) {
+    console.log(`Error getting contract for the chainId ${chainId}`);
+  }
+  return undefined;
 };
