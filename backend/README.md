@@ -19,13 +19,13 @@ Create a file `private.json` ( refer `private.example.json` ) inside `backend` f
 
 `yarn compile:circuits`
 
-Please do use this to compile circuits for production. Proper ceremony is required.
+Please do not use this to compile circuits for production. Proper ceremony is required.
 
 - Using Plonk
 
 `yarn compile:pks`
 
-Note: Plonks doesnt require phase 2 trusted ceremony per circuit, it's enough with the powers of tau ceremony which is universal.
+Note: Plonks does not require phase 2 trusted ceremony per circuit, it's enough with the powers of tau ceremony which is universal.
 
 This repo uses [Hermez Cryptographic Setup](https://blog.hermez.io/hermez-cryptographic-setup/) with power of 14, which is more than enough for this repo purpose.
 

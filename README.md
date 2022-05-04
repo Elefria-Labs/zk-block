@@ -7,9 +7,9 @@ The current sample zk-dapp has an age verification circuit.
 
 #### Pre-Requisite
 
-Install [rust](https://www.rust-lang.org/tools/install)
-Install [circom](https://docs.circom.io/getting-started/installation/)
-Install [nodejs](https://nodejs.org/en/download/)
+- Install [rust](https://www.rust-lang.org/tools/install)
+- Install [circom](https://docs.circom.io/getting-started/installation/)
+- Install [nodejs](https://nodejs.org/en/download/)
 
 #### Frontend / UI
 
@@ -30,7 +30,7 @@ Then, you can run locally in development mode with live reload:
 yarn dev
 ```
 
-Open http://localhost:3000 with your favorite browser to see your project.
+Open http://localhost:3000 in the browser.
 
 ### Backend ( Smart Contracts & Circuits)
 
@@ -38,8 +38,10 @@ Create a file `private.json` ( refer `private.example.json` ) inside `backend` f
 
 ##### Install deps
 
-`cd zk-block/backend`
-`yarn install`
+```
+cd zk-block/backend
+yarn install
+```
 
 ##### Compile contracts
 
@@ -51,13 +53,13 @@ Create a file `private.json` ( refer `private.example.json` ) inside `backend` f
 
 `yarn compile:circuits`
 
-Please do use this to compile circuits for production. Proper ceremony is required.
+Please do not use this to compile circuits for production. Proper ceremony is required.
 
 - Using Plonk
 
 `yarn compile:pks`
 
-Note: Plonks doesnt require phase 2 trusted ceremony per circuit, it's enough with the powers of tau ceremony which is universal.
+Note: Plonks does not require phase 2 trusted ceremony per circuit, it's enough with the powers of tau ceremony which is universal.
 
 This repo uses [Hermez Cryptographic Setup](https://blog.hermez.io/hermez-cryptographic-setup/) with power of 14, which is more than enough for this repo purpose.
 
