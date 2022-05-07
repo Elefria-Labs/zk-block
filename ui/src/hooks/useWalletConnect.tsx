@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { networkConfig } from '@config/network';
 import { toHex } from '@utils/wallet';
@@ -34,7 +34,6 @@ export const useWalletModal = () => {
 };
 
 export const useWalletConnect = () => {
-  const [web3ModalProvider, setWeb3ModalProvider] = useState<any>();
   const [provider, setProvider] = useState<any>();
   const [account, setAccount] = useState<string | undefined>();
   const [error, setError] = useState('');
@@ -43,7 +42,7 @@ export const useWalletConnect = () => {
 
   const web3Modal: Web3Modal | undefined = useWalletModal();
 
-  const connectWallet = async () => {
+  const connectWallet = useCallback(async () => {
     if (web3Modal == null) {
       return;
     }
@@ -53,7 +52,7 @@ export const useWalletConnect = () => {
 
       const accounts = await web3provider.listAccounts();
       const providerNetwork = await web3provider.getNetwork();
-      setWeb3ModalProvider(modalProvider);
+
       setProvider(web3provider);
       if (accounts) {
         setAccount(accounts[0]);
@@ -62,7 +61,7 @@ export const useWalletConnect = () => {
     } catch (error) {
       setError('Error connecting to wallet.');
     }
-  };
+  }, [web3Modal]);
 
   const switchNetwork = async (network?: number) => {
     if (network == null) {
@@ -93,13 +92,13 @@ export const useWalletConnect = () => {
     setChainId(undefined);
     setNetwork(networkOptions?.[0].chainId);
   };
-  const disconnect = async () => {
+  const disconnect = useCallback(async () => {
     if (web3Modal == null) {
       return;
     }
     await web3Modal.clearCachedProvider();
     refreshState();
-  };
+  }, [web3Modal]);
 
   // @ts-ignore
   useEffect(() => {
@@ -134,17 +133,16 @@ export const useWalletConnect = () => {
         provider.removeListener('disconnect', handleDisconnect);
       };
     }
-  }, [provider]);
+  }, [provider, disconnect, error]);
 
   useEffect(() => {
     if (web3Modal && web3Modal.cachedProvider) {
       connectWallet();
     }
-  }, [web3Modal]);
+  }, [web3Modal, connectWallet]);
 
   return {
     provider,
-    web3ModalProvider,
     account,
     network,
     chainId,

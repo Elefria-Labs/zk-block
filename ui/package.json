@@ -13,8 +13,7 @@
     "export:prod": "env-cmd -f env/.env.production next export",
     "clean": "rimraf .next out",
     "lint": "next lint",
-    "build-types": "tsc --noEmit --pretty",
-    "prepare": "husky install"
+    "build-types": "tsc --noEmit --pretty"
   },
   "dependencies": {
     "@emotion/react": "^11.7.1",
