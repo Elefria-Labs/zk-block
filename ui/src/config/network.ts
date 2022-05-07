@@ -4,8 +4,8 @@ export const networkConfig: Record<string, any> = {
     chainName: 'ETH',
     icon: 'ethereum',
     rpcUrls: [
-      'https://mainnet.infura.io/v3/${INFURA_API_KEY}',
-      'wss://mainnet.infura.io/ws/v3/${INFURA_API_KEY}',
+      'https://mainnet.infura.io/v3/',
+      'wss://mainnet.infura.io/ws/v3/',
       'https://api.mycryptoapi.com/eth',
       'https://cloudflare-eth.com',
     ],
@@ -36,12 +36,12 @@ export const networkConfig: Record<string, any> = {
     title: 'Ethereum Testnet Ropsten',
     chainName: 'ETH',
     rpcUrls: [
-      'https://ropsten.infura.io/v3/${INFURA_API_KEY}',
-      'wss://ropsten.infura.io/ws/v3/${INFURA_API_KEY}',
+      'https://ropsten.infura.io/v3/',
+      'wss://ropsten.infura.io/ws/v3/',
     ],
     faucets: [
-      'http://fauceth.komputing.org?chain=3&address=${ADDRESS}',
-      'https://faucet.ropsten.be?${ADDRESS}',
+      'http://fauceth.komputing.org?chain=3&address=',
+      'https://faucet.ropsten.be',
     ],
     nativeCurrency: {
       name: 'Ropsten Ether',
@@ -64,7 +64,7 @@ export const networkConfig: Record<string, any> = {
     ],
   },
 
-  '0x63564c40': {
+  '0x6357d2e0': {
     name: 'Harmony Testnet Shard 0',
     chainName: 'Harmony',
     rpcUrls: ['https://api.s0.b.hmny.io'],
@@ -86,7 +86,7 @@ export const networkConfig: Record<string, any> = {
       },
     ],
   },
-  '0x6357d2e0': {
+  '0x63564c40': {
     name: 'Harmony Mainnet Shard 0',
     chainName: 'Harmony',
     rpcUrls: ['https://api.harmony.one'],
