@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Typography, styled, Box } from '@mui/material';
 
 import { githubLink, twitterLink } from '@config/constants';
@@ -25,12 +26,14 @@ function Footer() {
         <img
           src={`../../assets/images/social/github-icon.png`}
           style={{ height: size, width: size }}
+          alt="zkblock, boilerplate for zk apps"
         />
       </a>
       <a target="_blank" href={twitterLink} rel="noreferrer">
         <img
           src={`../../assets/images/social/twitter-icon.svg`}
           style={{ height: size, width: size, margin: '0 8px' }}
+          alt="zkblock, boilerplate for zk apps"
         />
       </a>
 

@@ -1,14 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
-  fs: false,
-  fs: 'empty',
 });
 const withTM = require('next-transpile-modules')(); // pass the modules you would like to see transpiled
 const compose = require('next-compose');
 
 module.exports = compose([
-  [withTM],
+  [withBundleAnalyzer][withTM],
   {
     poweredByHeader: false,
     trailingSlash: true,

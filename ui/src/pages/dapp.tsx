@@ -1,12 +1,13 @@
 import React from 'react';
 
+import { Box } from '@mui/material';
+import dynamic from 'next/dynamic';
+
 import WalletContextProvider from '@components/dapp/WalletContext';
 import Footer from '@components/home/Footer';
 import NavBar from '@components/home/Nav';
 import { Meta } from '@layout/Meta';
-import { Box } from '@mui/material';
 import { Main } from '@templates/Main';
-import dynamic from 'next/dynamic';
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import('../components/dapp/AgeCheck'),
