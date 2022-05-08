@@ -1,10 +1,11 @@
 import React from 'react';
+
 import { Typography, styled, Box, BoxProps } from '@mui/material';
 
 const Title = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
-
+const altText = 'Zero Knowledge Proof boilerplate typescript nextjs circom';
 const baseImgPath = `../../assets/images/chain-icons/`;
 enum Icons {
   Bnb = 'bnb-bnb-logo.svg',
@@ -36,10 +37,26 @@ const DescriptionBlock = (props: DescriptionBlockPropsType) => {
           props?.body
         ) : (
           <div>
-            <img src={`${baseImgPath}${Icons.Ethereum}`} style={iconStyle} />
-            <img src={`${baseImgPath}${Icons.Harmony}`} style={iconStyle} />
-            <img src={`${baseImgPath}${Icons.Polygon}`} style={iconStyle} />
-            <img src={`${baseImgPath}${Icons.Bnb}`} style={iconStyle} />
+            <img
+              src={`${baseImgPath}${Icons.Ethereum}`}
+              style={iconStyle}
+              alt={altText}
+            />
+            <img
+              src={`${baseImgPath}${Icons.Harmony}`}
+              style={iconStyle}
+              alt={altText}
+            />
+            <img
+              src={`${baseImgPath}${Icons.Polygon}`}
+              style={iconStyle}
+              alt={altText}
+            />
+            <img
+              src={`${baseImgPath}${Icons.Bnb}`}
+              style={iconStyle}
+              alt={altText}
+            />
           </div>
         )}
       </Box>

@@ -1,9 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
 
-import BaseAlert from '@components/common/BaseAlert';
-import BaseButton from '@components/common/BaseButton';
-import { textFieldStyle } from '@components/common/BaseTextField';
-import { getAgeCheckContract } from '@hooks/contractHelpers';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Typography,
@@ -14,6 +10,11 @@ import {
   Paper,
   TextField,
 } from '@mui/material';
+
+import BaseAlert from '@components/common/BaseAlert';
+import BaseButton from '@components/common/BaseButton';
+import { textFieldStyle } from '@components/common/BaseTextField';
+import { getAgeCheckContract } from '@hooks/contractHelpers';
 import { generateBroadcastParams } from '@utils/ zk/zk-witness';
 import { truncateAddress } from '@utils/wallet';
 
@@ -140,7 +141,6 @@ const AgeCheck = () => {
                   setAgeVerified(false);
                 } catch (e) {
                   setError('Failed to generate proof, possibly age not valid.');
-                  console.log('Err:', e);
                 }
               }}
             >
@@ -181,7 +181,6 @@ const AgeCheck = () => {
                 .verifyAge(proof, input);
             } catch (e) {
               setError('Failed to generate proof, possibly age not valid.');
-              console.log('Err:', e);
             }
           }}
         >

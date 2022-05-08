@@ -1,6 +1,7 @@
-const generateWitnessJs = require('./witness_calculator.js');
-const snarkjs = require('snarkjs');
 const ff = require('ffjavascript');
+const snarkjs = require('snarkjs');
+
+const generateWitnessJs = require('./witness_calculator.js');
 
 const { unstringifyBigInts } = ff.utils;
 

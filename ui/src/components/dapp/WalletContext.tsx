@@ -1,7 +1,8 @@
-import { useWalletConnect } from '@hooks/useWalletConnect';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import Web3Modal from 'web3modal';
+
+import { useWalletConnect } from '@hooks/useWalletConnect';
 
 type WalletContextProviderPropsType = {
   children: React.ReactElement;

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Typography, styled, Box } from '@mui/material';
 
 import { githubLink, twitterLink } from '@config/constants';
@@ -25,6 +26,7 @@ const NavBar = () => {
       <img
         src={`../../assets/images/zk-block-logo.svg`}
         style={{ height: '40px', width: 'auto' }}
+        alt="zkblock, boilerplate for zk apps"
       />
       <Title variant="h2" ml={1}>
         Block
@@ -35,6 +37,7 @@ const NavBar = () => {
           <img
             src={`../../assets/images/social/github-icon.png`}
             style={{ height: socialIconSize, width: socialIconSize }}
+            alt="zkblock, boilerplate for zk apps"
           />
         </a>
         <a target="_blank" href={twitterLink} rel="noreferrer">
@@ -45,6 +48,7 @@ const NavBar = () => {
               width: socialIconSize,
               margin: '0 16px',
             }}
+            alt="zkblock, boilerplate for zk apps"
           />
         </a>
       </Box>

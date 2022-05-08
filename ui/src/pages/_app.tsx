@@ -9,10 +9,6 @@ import '../styles/global.css';
 import '@firebase/firebase-config';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  if (process.env.NEXT_PUBLIC_ENV === 'prod') {
-    console.log = function () {};
-  }
-
   return (
     <Providers>
       <ThemeProvider theme={themes()}>

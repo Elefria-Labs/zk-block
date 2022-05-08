@@ -1,11 +1,5 @@
 import React from 'react';
 
-import { maxButtonHeight } from '@components/common/BaseAlert';
-import BaseButton, { maxButtonWidth } from '@components/common/BaseButton';
-import { textFieldStyle } from '@components/common/BaseTextField';
-import { contractAddresses } from '@config/constants';
-import { networkOptions } from '@hooks/useWalletConnect';
-
 import {
   Box,
   FormControl,
@@ -14,7 +8,14 @@ import {
   TextField,
 } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
+
+import { maxButtonHeight } from '@components/common/BaseAlert';
+import BaseButton, { maxButtonWidth } from '@components/common/BaseButton';
+import { textFieldStyle } from '@components/common/BaseTextField';
+import { contractAddresses } from '@config/constants';
+import { networkOptions } from '@hooks/useWalletConnect';
 import { truncateAddress } from '@utils/wallet';
+
 import { useWalletContext } from './WalletContext';
 
 const supportedChains = Object.keys(contractAddresses.ageCheck ?? {});

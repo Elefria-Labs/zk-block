@@ -1,10 +1,6 @@
 {
   // Configuration for JavaScript files
-  "extends": [
-    "airbnb-base",
-    "next/core-web-vitals",
-    "plugin:prettier/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -35,7 +31,8 @@
         "plugin:prettier/recommended"
       ],
       "parserOptions": {
-        "project": "ui/tsconfig.json"
+        "project": "ui/tsconfig.json",
+        "tsconfigRootDir": ".."
       },
       "rules": {
         "no-console": "warn",

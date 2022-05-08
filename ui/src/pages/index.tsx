@@ -1,5 +1,8 @@
 import React from 'react';
 
+import { Typography, styled, Box } from '@mui/material';
+import Link from 'next/link';
+
 import BaseButton from '@components/common/BaseButton';
 import DescriptionBlock from '@components/home/DescriptionBlock';
 import DescriptionBlock2, {
@@ -9,9 +12,7 @@ import Footer from '@components/home/Footer';
 import NavBar from '@components/home/Nav';
 import StatusChecklist from '@components/home/StatusChecklist';
 import { Meta } from '@layout/Meta';
-import { Typography, styled, Box } from '@mui/material';
 import { Main } from '@templates/Main';
-import Link from 'next/link';
 
 const Title = styled(Typography)((_) => ({
   color: 'black',
