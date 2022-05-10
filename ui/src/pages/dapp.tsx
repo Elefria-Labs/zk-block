@@ -3,7 +3,6 @@ import React from 'react';
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 
-import WalletContextProvider from '@components/dapp/WalletContext';
 import Footer from '@components/home/Footer';
 import NavBar from '@components/home/Nav';
 import { Meta } from '@layout/Meta';
@@ -32,44 +31,42 @@ const Dapp = () => {
         />
       }
     >
-      <WalletContextProvider>
-        <>
-          <Box display="flex" flexDirection="row" justifyContent="center">
-            <NavBar />
-          </Box>
+      <>
+        <Box display="flex" flexDirection="row" justifyContent="center">
+          <NavBar />
+        </Box>
+        <Box
+          display="flex"
+          flexDirection="row"
+          flex="1"
+          justifyContent="center"
+        >
           <Box
             display="flex"
-            flexDirection="row"
-            flex="1"
+            flexDirection="column"
             justifyContent="center"
+            alignContent="center"
+            style={{ maxWidth: '1080px' }}
           >
+            {/* Grid */}
             <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignContent="center"
-              style={{ maxWidth: '1080px' }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignSelf: 'center',
+                maxWidth: '1080px',
+                minHeight: '720px',
+                minWidth: '1080px',
+              }}
             >
-              {/* Grid */}
-              <Box
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignSelf: 'center',
-                  maxWidth: '1080px',
-                  minHeight: '720px',
-                  minWidth: '1080px',
-                }}
-              >
-                <Box>
-                  <WalletConnectComponent />
-                </Box>
-                <DynamicComponentWithNoSSR />
+              <Box>
+                <WalletConnectComponent />
               </Box>
+              <DynamicComponentWithNoSSR />
             </Box>
           </Box>
-        </>
-      </WalletContextProvider>
+        </Box>
+      </>
       <Footer />
     </Main>
   );

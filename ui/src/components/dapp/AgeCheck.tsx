@@ -29,7 +29,10 @@ const Row = styled(Box)((_) => ({
 const AgeCheck = () => {
   const [age, setAge] = React.useState<number>(19);
   const [error, setError] = React.useState<string | undefined>();
-  const [open, setOpen] = React.useState<boolean>(false);
+  const [alert, setAlert] = React.useState<{ open: boolean; message: string }>({
+    open: false,
+    message: '',
+  });
   const [ageVerified, setAgeVerified] = React.useState<boolean>(false);
   const { chainId, provider, account } = useWalletContext();
 
@@ -43,9 +46,23 @@ const AgeCheck = () => {
       return;
     }
 
-    ageCheckContract.on('AgeVerfied', (_: string) => {
-      setOpen(true);
-      setAgeVerified(true);
+    ageCheckContract.on('AgeVerfied', (address, isVerified) => {
+      if (isVerified && address === account) {
+        setAlert({
+          open: true,
+          message: `Age Verified for ${truncateAddress(address)}`,
+        });
+        setAgeVerified(true);
+        return;
+      }
+      if (!isVerified && address === account) {
+        setAlert({
+          open: true,
+          message: `Age flag reset for ${truncateAddress(address)}`,
+        });
+        setAgeVerified(true);
+        return;
+      }
     });
   }, [chainId, account, ageCheckContract]);
 
@@ -65,10 +82,70 @@ const AgeCheck = () => {
     getAgeVerificationStatus();
   }, [account, getAgeVerificationStatus, chainId, ageCheckContract]);
 
+  const handleVerify = async () => {
+    if (ageCheckContract == null) {
+      return;
+    }
+
+    try {
+      const [a, b, c, input] = await generateBroadcastParams({
+        ...{
+          ageLimit: 18,
+          age,
+        },
+      });
+      setError(undefined);
+      const proof = [...a, ...b[0], ...b[1], ...c];
+      try {
+        const tx = await ageCheckContract
+          .connect(provider.getSigner())
+          .verifyAge(proof, input);
+        if (tx?.hash) {
+          setAlert({
+            open: true,
+            message: `Transaction broadcasted with hash ${tx.hash}`,
+          });
+        }
+      } catch (e) {
+        setAlert({
+          open: true,
+          message: `Error sending transaction. Please try again!`,
+        });
+      }
+    } catch (e) {
+      setError('Failed to generate proof, possibly age not valid.');
+    }
+  };
+
+  const handleReset = async () => {
+    if (ageCheckContract == null) {
+      return;
+    }
+    try {
+      const tx = await ageCheckContract
+        .connect(provider.getSigner())
+        .setVerficationStatus(false);
+      setAgeVerified(false);
+      if (tx?.hash) {
+        setAlert({
+          open: true,
+          message: `Transaction broadcasted with hash ${tx.hash}`,
+        });
+      }
+    } catch (e) {
+      setAlert({
+        open: true,
+        message: `Error sending transaction. Please try again!`,
+      });
+    }
+  };
   return (
     <div>
       <Box display="flex" flexDirection="row" justifyContent="center">
-        <Collapse in={open} sx={{ margin: 0, padding: 0, width: '300px' }}>
+        <Collapse
+          in={alert.open}
+          sx={{ margin: 0, padding: 0, width: '300px' }}
+        >
           <BaseAlert
             action={
               <IconButton
@@ -76,7 +153,7 @@ const AgeCheck = () => {
                 color="inherit"
                 size="small"
                 onClick={() => {
-                  setOpen(false);
+                  setAlert({ open: false, message: '' });
                 }}
               >
                 <CloseIcon fontSize="inherit" />
@@ -85,7 +162,9 @@ const AgeCheck = () => {
             severity="success"
             sx={{ mb: 2 }}
           >
-            Verfied
+            <Typography flexWrap={'wrap'} sx={{ wordBreak: 'break-word' }}>
+              {alert.message}
+            </Typography>
           </BaseAlert>
         </Collapse>
       </Box>
@@ -128,22 +207,7 @@ const AgeCheck = () => {
                 {ageVerified ? 'is above 18.' : 'not verified.'}
               </Typography>
             )}
-            <BaseButton
-              variant="contained"
-              onClick={async () => {
-                if (ageCheckContract == null) {
-                  return;
-                }
-                try {
-                  await ageCheckContract
-                    .connect(provider.getSigner())
-                    .setVerficationStatus(false);
-                  setAgeVerified(false);
-                } catch (e) {
-                  setError('Failed to generate proof, possibly age not valid.');
-                }
-              }}
-            >
+            <BaseButton variant="contained" onClick={handleReset}>
               Reset
             </BaseButton>
           </Box>
@@ -161,32 +225,11 @@ const AgeCheck = () => {
           style={{ marginRight: '8px' }}
           inputProps={{ style: textFieldStyle }}
         />
-        <BaseButton
-          variant="contained"
-          onClick={async () => {
-            if (ageCheckContract == null) {
-              return;
-            }
-            try {
-              const [a, b, c, input] = await generateBroadcastParams({
-                ...{
-                  ageLimit: 18,
-                  age,
-                },
-              });
-              setError(undefined);
-              const proof = [...a, ...b[0], ...b[1], ...c];
-              await ageCheckContract
-                .connect(provider.getSigner())
-                .verifyAge(proof, input);
-            } catch (e) {
-              setError('Failed to generate proof, possibly age not valid.');
-            }
-          }}
-        >
+        <BaseButton variant="contained" onClick={handleVerify}>
           Verify Age
         </BaseButton>
       </Row>
+      {/* <HowItWorks /> */}
     </div>
   );
 };
