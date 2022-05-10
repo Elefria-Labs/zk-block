@@ -60,7 +60,7 @@ const AgeCheck = () => {
           open: true,
           message: `Age flag reset for ${truncateAddress(address)}`,
         });
-        setAgeVerified(true);
+        setAgeVerified(false);
         return;
       }
     });
@@ -125,7 +125,7 @@ const AgeCheck = () => {
       const tx = await ageCheckContract
         .connect(provider.getSigner())
         .setVerficationStatus(false);
-      setAgeVerified(false);
+
       if (tx?.hash) {
         setAlert({
           open: true,
@@ -139,6 +139,17 @@ const AgeCheck = () => {
       });
     }
   };
+  const AgeVerfiedText = React.memo(() => {
+    if (account == null) {
+      return null;
+    }
+    return (
+      <Typography mb="8px">
+        Age for<b> {truncateAddress(account) ?? ''} </b>{' '}
+        {ageVerified ? 'is above 18.' : 'not verified.'}
+      </Typography>
+    );
+  });
   return (
     <div>
       <Box display="flex" flexDirection="row" justifyContent="center">
@@ -201,12 +212,7 @@ const AgeCheck = () => {
           }}
         >
           <Box display="flex" flexDirection="column" justifyContent="center">
-            {account && (
-              <Typography mb="8px">
-                Age for<b> {truncateAddress(account) ?? ''} </b>{' '}
-                {ageVerified ? 'is above 18.' : 'not verified.'}
-              </Typography>
-            )}
+            <AgeVerfiedText />
             <BaseButton variant="contained" onClick={handleReset}>
               Reset
             </BaseButton>
