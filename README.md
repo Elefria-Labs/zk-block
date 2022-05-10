@@ -11,6 +11,10 @@ The current sample zk-dapp has an age verification circuit.
 - Install [circom](https://docs.circom.io/getting-started/installation/)
 - Install [nodejs](https://nodejs.org/en/download/)
 
+#### How it Works?
+
+Check [here](./ui/public/assets/images/howitworks.png)
+
 #### Frontend / UI
 
 Run the following command on your local environment:
@@ -31,6 +35,8 @@ yarn dev
 ```
 
 Open http://localhost:3000 in the browser.
+
+Now you play around with Age Verification UI, ( currently deployed on Polygon, and Harmony)
 
 ### Backend ( Smart Contracts & Circuits)
 
@@ -68,6 +74,13 @@ This repo uses [Hermez Cryptographic Setup](https://blog.hermez.io/hermez-crypto
 `yarn test`
 
 ##### Deploy Contract
+
+Note: Frontend already has deployed contract address configured ( inside `ui/src/config/constants`).
+
+```
+Polygon Testnet: 0xD8bfe046B2b2B66672841196E9aE3785200D5FE0
+Harmony Testnet: 0x457900273036dB9C5157Fcb1072294C0E7e720F4
+```
 
 Select network - `chain.ts` contains network configuration. Network selected for deployment is mentioned in `hardhat.config.ts` file. Default is "ONE" ( HARMONY Network).
 

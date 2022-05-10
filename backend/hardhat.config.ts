@@ -18,7 +18,7 @@ function getNetworks(): NetworksUserConfig | undefined {
   const TESTNET_PRIVATE_KEY = KEYS.privateKey
   // const MAINNET_PRIVATE_KEY = KEYS.privateKey
 
-  const selectedNetwork = "polygon" // check chain.ts file to deploy on particular network
+  const selectedNetwork = "one" // check chain.ts file to deploy on particular network
   const accounts = [`0x${TESTNET_PRIVATE_KEY}`]
 
   return {
