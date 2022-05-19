@@ -3,6 +3,10 @@
 Website- [ZkBlock](https://zkblock.app)
 The current sample zk-dapp has an age verification circuit.
 
+[Read walkthrough guide on Hackernoon](https://hackernoon.com/how-to-use-a-zero-knowledge-dapp-boilerplate)
+
+![](https://i.imgur.com/waxVImv.png)
+
 ### Getting started
 
 #### Pre-Requisite
@@ -13,7 +17,10 @@ The current sample zk-dapp has an age verification circuit.
 
 #### How it Works?
 
-Check [here](./ui/public/assets/images/howitworks.png)
+- Walkthrough [here](https://hackernoon.com/how-to-use-a-zero-knowledge-dapp-boilerplate)
+- Diagram [here](./ui/public/assets/images/howitworks.png)
+
+![](https://i.imgur.com/waxVImv.png)
 
 #### Frontend / UI
 
@@ -37,6 +44,8 @@ yarn dev
 Open http://localhost:3000 in the browser.
 
 Now you play around with Age Verification UI, ( currently deployed on Polygon, and Harmony)
+
+![](https://i.imgur.com/waxVImv.png)
 
 ### Backend ( Smart Contracts & Circuits)
 
@@ -90,4 +99,10 @@ Run below command to deploy
 
 ### Contributions
 
-Everyone is welcome to contribute to this project. Feel free to open an issue if you have question or found a bug.
+> Everyone is welcome to contribute to this project.
+
+- Add more beginner friendly circuits
+- Improve the site's codebase
+- Write tests
+- Discuss ideas in issues
+- Improve documentation
