@@ -46,15 +46,7 @@ export function ZkCircuit() {
               javascript
             </Tag>
           </Stack>
-          {/* <Text
-            color={'green.500'}
-            textTransform={'uppercase'}
-            fontWeight={800}
-            fontSize={'sm'}
-            letterSpacing={1.1}
-          >
-            Blog
-          </Text> */}
+
           <Text color={'black'} textAlign="justify" mt={8}>
             This is a JavaScript and Pure Web Assembly implementation of zkSNARK
             and PLONK schemes. It uses the Groth16 Protocol (3 point only and 3

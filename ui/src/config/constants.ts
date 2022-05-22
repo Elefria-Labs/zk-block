@@ -1,5 +1,5 @@
 export const githubLink = 'https://github.com/heypran/zk-block';
-export const twitterLink = 'https://twitter.com/zkblock_app';
+export const twitterLink = 'https://twitter.com/heypran';
 
 export const contractAddresses: Record<string, Record<string, string>> = {
   ageCheck: {
@@ -22,5 +22,4 @@ export const Links = {
 };
 
 export const repoLink = 'https://github.com/heypran/zk-block';
-
 export const hackernoonGuide = 'https://bit.ly/zkblock-ageverification';

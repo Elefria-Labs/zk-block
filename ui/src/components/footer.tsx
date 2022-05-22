@@ -6,8 +6,10 @@ import {
   Link,
   Stack,
   Text,
+  Icon,
 } from '@chakra-ui/react';
-import { Links } from '@config/constants';
+import { Links, twitterLink } from '@config/constants';
+import { TwitterIcon } from './icon/twitter';
 
 function NavigationLinks() {
   return (
@@ -122,6 +124,24 @@ export function Footer() {
               target="_blank"
             >
               @heypran
+            </Link>
+
+            <Link
+              aria-label="Go to GitHub page"
+              href={twitterLink}
+              fontSize="13px"
+              ml="16px"
+            >
+              <Icon
+                as={TwitterIcon}
+                display="block"
+                transition="color 0.2s"
+                cursor="pointer"
+                color="black"
+                w="6"
+                h="6"
+                _hover={{ color: 'gray.600' }}
+              />
             </Link>
           </Flex>
 
