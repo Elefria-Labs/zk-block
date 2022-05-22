@@ -1,15 +1,11 @@
 import React from 'react';
 
-import { Typography, styled, Box } from '@mui/material';
+import { Text, Box } from '@chakra-ui/react';
 
 import { githubLink, twitterLink } from '@config/constants';
 
 export const navBarHeight = '64px';
 const socialIconSize = '32px';
-
-const Title = styled(Typography)((_) => ({
-  color: 'black',
-}));
 
 const NavBar = () => {
   return (
@@ -28,9 +24,9 @@ const NavBar = () => {
         style={{ height: '40px', width: 'auto' }}
         alt="zkblock, boilerplate for zk apps"
       />
-      <Title variant="h2" ml={1}>
+      <Text variant="h2" ml={1}>
         Block
-      </Title>
+      </Text>
 
       <Box display="flex" justifyContent="flex-end" flex="1">
         <a target="_blank" href={githubLink} rel="noreferrer">

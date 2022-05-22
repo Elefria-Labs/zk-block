@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 
-import { networkConfig } from '@config/network';
-import { toHex } from '@utils/wallet';
-import { ethers } from 'ethers';
+import { ethers, providers } from 'ethers';
 import Web3Modal from 'web3modal';
+import { getNetworkForMetamask, networkConfig } from '@config/network';
+import { toHex } from '@utils/wallet';
 
 export const networkOptions = Object.values(networkConfig);
 
@@ -34,11 +34,13 @@ export const useWalletModal = () => {
 };
 
 export const useWalletConnect = () => {
-  const [provider, setProvider] = useState<any>();
+  const [provider, setProvider] = useState<
+    providers.Web3Provider | undefined
+  >();
   const [account, setAccount] = useState<string | undefined>();
   const [error, setError] = useState('');
   const [chainId, setChainId] = useState<number | undefined>();
-  const [network, setNetwork] = useState<number>(networkOptions[0]?.chainId);
+  const [network, setNetwork] = useState<number>(8001);
 
   const web3Modal: Web3Modal | undefined = useWalletModal();
 
@@ -57,36 +59,42 @@ export const useWalletConnect = () => {
       if (accounts) {
         setAccount(accounts[0]);
       }
+
       setChainId(providerNetwork.chainId);
     } catch (error) {
       setError('Error connecting to wallet.');
     }
   }, [web3Modal]);
 
-  const switchNetwork = async (network?: number) => {
-    if (network == null) {
-      return;
-    }
-
-    try {
-      await provider.provider.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: toHex(network) }],
-      });
-      connectWallet();
-    } catch (switchError) {
-      if ((switchError as any).code === 4902) {
-        try {
-          await provider.provider.request({
-            method: 'wallet_addEthereumChain',
-            params: [networkConfig[toHex(network)]],
-          });
-        } catch (error) {
-          setError('Error swtich wallet.');
+  const switchNetwork = useCallback(
+    async (network?: number) => {
+      if (network == null || provider == null || provider?.provider == null) {
+        return;
+      }
+      try {
+        // @ts-ignore
+        await provider?.provider?.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: toHex(network) }],
+        });
+        connectWallet();
+      } catch (switchError) {
+        if ((switchError as any).code === 4902) {
+          try {
+            // @ts-ignore
+            await provider?.provider?.request({
+              method: 'wallet_addEthereumChain',
+              params: [getNetworkForMetamask(networkConfig[toHex(network)])],
+            });
+            // connectWallet();
+          } catch (error) {
+            setError('Error switching wallet.');
+          }
         }
       }
-    }
-  };
+    },
+    [connectWallet, provider],
+  );
   const refreshState = () => {
     setAccount('');
     setChainId(undefined);
@@ -100,15 +108,13 @@ export const useWalletConnect = () => {
     refreshState();
   }, [web3Modal]);
 
-  // @ts-ignore
   useEffect(() => {
     if (provider == null || provider?.on == null) {
       return;
     }
     if (provider?.on) {
       const handleAccountsChanged = (accounts: string) => {
-        console.log('accountsChanged', accounts);
-        if (accounts) setAccount(accounts[0]);
+        if (accounts) setAccount(accounts);
       };
 
       const handleChainChanged = (_hexChainId: number) => {
@@ -116,7 +122,6 @@ export const useWalletConnect = () => {
       };
 
       const handleDisconnect = () => {
-        console.log('disconnect', error);
         disconnect();
       };
 
@@ -140,6 +145,18 @@ export const useWalletConnect = () => {
       connectWallet();
     }
   }, [web3Modal, connectWallet]);
+
+  useEffect(() => {
+    if (provider == null || chainId == null) {
+      return;
+    }
+
+    if (chainId === network) {
+      return;
+    }
+
+    switchNetwork(network);
+  }, [provider, chainId]);
 
   return {
     provider,

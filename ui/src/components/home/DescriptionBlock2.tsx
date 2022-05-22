@@ -1,11 +1,6 @@
 import React from 'react';
 
-import { Typography, styled, Box } from '@mui/material';
-
-// TODO
-const Title = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.primary,
-}));
+import { Text, Box } from '@chakra-ui/react';
 
 export type FeatureType = {
   title: string;
@@ -28,12 +23,12 @@ const DescriptionBlock2 = (props: DescriptionBlock2TypeProps) => {
     >
       {props.features.map((item, index) => (
         <Box key={item.title}>
-          <Title variant="h1" mt={index === 0 ? 0 : 8}>
+          <Text variant="lg" mt={index === 0 ? 0 : 8}>
             {item.title}
-          </Title>
-          <Title variant="h3" mt={4}>
+          </Text>
+          <Text variant="md" mt={4}>
             {item.description}
-          </Title>
+          </Text>
         </Box>
       ))}
     </Box>

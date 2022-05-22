@@ -1,48 +1,36 @@
 import React from 'react';
 
-import CheckIcon from '@mui/icons-material/Check';
-import { Typography, styled, Box } from '@mui/material';
-
-const Title = styled(Typography)((_) => ({
-  color: 'white',
-}));
+import { CheckIcon } from '@chakra-ui/icons';
+import { Text, Box } from '@chakra-ui/react';
 
 type StatusChecklistPropsType = {};
 const featureChecklist = [
-  'Material UI',
+  'Demo ZK Dapp',
+  'SNARKS- Groth16 and Plonk ',
+  'Metamask Wallets',
+  'Multiple EVM Chains',
   'Next JS',
   'Typescript',
-  'ZKP- Snarks',
-  'EVM Wallets',
-  'Demo ZK Dapp',
+  'Chakra UI',
 ];
 const StatusChecklist = (_: StatusChecklistPropsType) => {
   return (
     <Box
-      style={{
-        display: 'flex',
-        flex: '1',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        height: '100%',
-        backgroundImage: `url(/assets/images/status-bg.svg)`,
-        borderRadius: '14px',
-      }}
-      paddingX={4}
-      paddingY={0.5}
+      backgroundColor="gray.200"
+      p="16px"
+      borderRadius="8px"
+      mt={['32px', 0]}
     >
-      <Box>
-        {featureChecklist.map((item) => {
-          return (
-            <Box display="flex" key={item} marginY={1} alignItems="center">
-              <CheckIcon color="success" fontSize="large" />
-              <Title variant="h2" ml={4}>
-                {item}
-              </Title>
-            </Box>
-          );
-        })}
-      </Box>
+      {featureChecklist.map((item) => {
+        return (
+          <Box display="flex" key={item} marginY={1} alignItems="center">
+            <CheckIcon color="green.500" fontSize="lg" />
+            <Text fontSize="lg" ml={4}>
+              {item}
+            </Text>
+          </Box>
+        );
+      })}
     </Box>
   );
 };

@@ -12,3 +12,15 @@ export const contractAddresses: Record<string, Record<string, string>> = {
   },
   // add more contract addresses here...
 };
+
+export const Links = {
+  home: 'https://zkblock.app/',
+  tools: 'tools',
+  boilerplate: '/',
+  contribute: 'contribute',
+  about: 'about',
+};
+
+export const repoLink = 'https://github.com/heypran/zk-block';
+
+export const hackernoonGuide = 'https://bit.ly/zkblock-ageverification';

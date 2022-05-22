@@ -1,10 +1,7 @@
 import React from 'react';
 
-import { Typography, styled, Box, BoxProps } from '@mui/material';
+import { Text, Box, BoxProps } from '@chakra-ui/react';
 
-const Title = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.primary,
-}));
 const altText = 'Zero Knowledge Proof boilerplate typescript nextjs circom';
 const baseImgPath = `../../assets/images/chain-icons/`;
 enum Icons {
@@ -28,9 +25,9 @@ const DescriptionBlock = (props: DescriptionBlockPropsType) => {
         flexDirection: 'column',
       }}
     >
-      <Title variant="h1">
+      <Text fontSize="lg">
         {props?.title ? props?.title : 'Support for major EVM chains'}
-      </Title>
+      </Text>
 
       <Box mt={8} style={{ ...(props?.bodyStyle ?? {}) }}>
         {props?.body ? (
