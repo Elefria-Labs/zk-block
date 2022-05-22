@@ -1,14 +1,11 @@
 import React from 'react';
 
-import { Typography, styled, Box } from '@mui/material';
+import { Text, Box } from '@chakra-ui/react';
 
 import { githubLink, twitterLink } from '@config/constants';
 
 export const footerHeight = '48px';
 
-const Title = styled(Typography)((_) => ({
-  color: 'black',
-}));
 const size = '24px';
 
 function Footer() {
@@ -37,7 +34,7 @@ function Footer() {
         />
       </a>
 
-      <Title variant="h4">zkblock | open source | 2022</Title>
+      <Text variant="h4">zkblock | open source | 2022</Text>
     </Box>
   );
 }

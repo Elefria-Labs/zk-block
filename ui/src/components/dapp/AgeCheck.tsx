@@ -1,30 +1,22 @@
 import React, { useEffect, useCallback } from 'react';
 
-import CloseIcon from '@mui/icons-material/Close';
 import {
-  Typography,
-  styled,
+  Text,
   Box,
-  IconButton,
+  Heading,
+  Button,
   Collapse,
-  Paper,
-  TextField,
-} from '@mui/material';
+  Input,
+  Flex,
+  Alert,
+  FormHelperText,
+} from '@chakra-ui/react';
 
-import BaseAlert from '@components/common/BaseAlert';
-import BaseButton from '@components/common/BaseButton';
-import { textFieldStyle } from '@components/common/BaseTextField';
 import { getAgeCheckContract } from '@hooks/contractHelpers';
 import { generateBroadcastParams } from '@utils/ zk/zk-witness';
 import { truncateAddress } from '@utils/wallet';
 
 import { useWalletContext } from './WalletContext';
-
-const Row = styled(Box)((_) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  flex: 1,
-}));
 
 const AgeCheck = () => {
   const [age, setAge] = React.useState<number>(19);
@@ -83,7 +75,7 @@ const AgeCheck = () => {
   }, [account, getAgeVerificationStatus, chainId, ageCheckContract]);
 
   const handleVerify = async () => {
-    if (ageCheckContract == null) {
+    if (ageCheckContract == null || provider == null) {
       return;
     }
 
@@ -118,7 +110,7 @@ const AgeCheck = () => {
   };
 
   const handleReset = async () => {
-    if (ageCheckContract == null) {
+    if (ageCheckContract == null || provider == null) {
       return;
     }
     try {
@@ -144,10 +136,10 @@ const AgeCheck = () => {
       return null;
     }
     return (
-      <Typography mb="8px">
+      <Text mb="8px">
         Age for<b> {truncateAddress(account) ?? ''} </b>{' '}
         {ageVerified ? 'is above 18.' : 'not verified.'}
-      </Typography>
+      </Text>
     );
   });
   return (
@@ -155,28 +147,13 @@ const AgeCheck = () => {
       <Box display="flex" flexDirection="row" justifyContent="center">
         <Collapse
           in={alert.open}
-          sx={{ margin: 0, padding: 0, width: '300px' }}
+          style={{ margin: 0, padding: 0, width: '300px' }}
         >
-          <BaseAlert
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setAlert({ open: false, message: '' });
-                }}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-            severity="success"
-            sx={{ mb: 2 }}
-          >
-            <Typography flexWrap={'wrap'} sx={{ wordBreak: 'break-word' }}>
+          <Alert variant="subtle" status="success" sx={{ mb: 2 }}>
+            <Text flexWrap={'wrap'} sx={{ wordBreak: 'break-word' }}>
               {alert.message}
-            </Typography>
-          </BaseAlert>
+            </Text>
+          </Alert>
         </Collapse>
       </Box>
       <Box
@@ -187,9 +164,9 @@ const AgeCheck = () => {
           marginBottom: '16px',
         }}
       >
-        <Typography mb="8px" variant="h2">
+        <Heading variant={'h2'}>
           Age verification using Zero Knowledge Proofs.
-        </Typography>
+        </Heading>
       </Box>
       <Box
         sx={{
@@ -199,8 +176,7 @@ const AgeCheck = () => {
           marginBottom: '16px',
         }}
       >
-        <Paper
-          elevation={3}
+        <Box
           sx={{
             height: '140px',
             width: '300px',
@@ -208,34 +184,50 @@ const AgeCheck = () => {
             display: 'flex',
             justifyContent: 'center',
             alignContent: 'center',
+            alignItems: 'center',
             padding: '8px',
+            borderRadius: '16px',
           }}
         >
-          <Box display="flex" flexDirection="column" justifyContent="center">
-            <AgeVerfiedText />
-            <BaseButton variant="contained" onClick={handleReset}>
-              Reset
-            </BaseButton>
-          </Box>
-        </Paper>
+          {account ? (
+            <Box display="flex" flexDirection="column" justifyContent="center">
+              <AgeVerfiedText />
+              <Button variant="solid" onClick={handleReset}>
+                Reset
+              </Button>
+            </Box>
+          ) : (
+            <Text fontSize="lg" variant="bold" as="b">
+              {' '}
+              Please connect your wallet.
+            </Text>
+          )}
+        </Box>
       </Box>
-      <Row justifyContent="center" alignItems="flex-start">
-        <TextField
+      <Flex justifyContent="center">
+        <Input
           id="outlined-basic"
-          variant="outlined"
           value={age}
           type="number"
+          disabled={!account}
           onChange={(e) => setAge(Number(e.target.value ?? 0))}
-          error={!!error}
-          helperText={!!error && error}
+          isInvalid={!!error}
+          // helperText={!!error && error}
+          w="140px"
           style={{ marginRight: '8px' }}
-          inputProps={{ style: textFieldStyle }}
         />
-        <BaseButton variant="contained" onClick={handleVerify}>
+        {error && <FormHelperText>{error}</FormHelperText>}
+        <Button
+          variant="solid"
+          bg="black"
+          _hover={{ bg: 'gray.600' }}
+          color="white"
+          onClick={handleVerify}
+          disabled={!account}
+        >
           Verify Age
-        </BaseButton>
-      </Row>
-      {/* <HowItWorks /> */}
+        </Button>
+      </Flex>
     </div>
   );
 };

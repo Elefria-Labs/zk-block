@@ -1,3 +1,5 @@
+import { toHex } from '@utils/wallet';
+
 export const networkConfig: Record<string, any> = {
   '0x1': {
     name: 'Ethereum Mainnet',
@@ -238,4 +240,31 @@ export const networkConfig: Record<string, any> = {
       },
     ],
   },
+};
+
+export type AddEthereumChainParameterType = {
+  chainId: string;
+  blockExplorerUrls?: string[];
+  chainName?: string;
+  iconUrls?: string[];
+  nativeCurrency?: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  rpcUrls?: string[];
+};
+
+export const getNetworkForMetamask = (
+  network: any,
+): AddEthereumChainParameterType => {
+  delete network['name'];
+  delete network['faucets'];
+  delete network['infoURL'];
+  delete network['networkId'];
+  delete network['shortName'];
+  delete network['title'];
+  delete network['blockExplorerUrls'];
+  network['chainId'] = toHex(network['chainId']);
+  return network;
 };

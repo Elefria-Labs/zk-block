@@ -3,13 +3,14 @@ import React, { Dispatch, SetStateAction } from 'react';
 import Web3Modal from 'web3modal';
 
 import { useWalletConnect } from '@hooks/useWalletConnect';
+import { providers } from 'ethers';
 
 type WalletContextProviderPropsType = {
   children: React.ReactElement;
 };
 
 export type WalletContextProviderType = {
-  provider: any;
+  provider: providers.Web3Provider | undefined;
   account: string | undefined;
   network: number | undefined;
   chainId: number | undefined;

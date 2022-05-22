@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "zk-block"
+  },
+  "targets": {
+    "zk-block": {
+      "hosting": {
+        "zkboilerplate": [
+          "out"
+        ],
+        "zkblock": [
+          "out"
+        ]
+      }
+    }
   }
 }
