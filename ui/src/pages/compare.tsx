@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 
+<<<<<<< HEAD
 import { Box, Container, Divider, Flex, Heading, Text } from '@chakra-ui/react';
+=======
+import { Box, Container, Flex } from '@chakra-ui/react';
+>>>>>>> db68b24 (feat: init)
 import { Meta } from '@layout/Meta';
 import { Main } from '@templates/Main';
 import WalletConnectComponent from '@components/dapp/WalletConnection';
@@ -49,6 +53,7 @@ const Compare = () => {
               <Box>
                 <WalletConnectComponent />
               </Box>
+<<<<<<< HEAD
 
               <Box py={'16px'} color="gray.200">
                 <Heading
@@ -87,6 +92,20 @@ const Compare = () => {
                     <EmptyItem onSelect={handleOnAddToCompareList} />
                   </>
                 )}
+=======
+              <Flex>
+                {isAllOkay &&
+                  compareList.map((contract: string, i) => (
+                    <CompareItem
+                      key={`${contract}-${i}`}
+                      account={account}
+                      chainId={chainId}
+                      provider={provider}
+                      contractName={contract}
+                    />
+                  ))}
+                <EmptyItem onSelect={handleOnAddToCompareList} />
+>>>>>>> db68b24 (feat: init)
               </Flex>
             </Box>
           </Box>
