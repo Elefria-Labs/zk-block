@@ -27,8 +27,8 @@ async function main() {
     fs.mkdirSync(buildPath, { recursive: true })
   }
 
-  if (!fs.existsSync(`${buildPath}/powersOfTau28_hez_final_14.ptau`)) {
-    const url = "https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_14.ptau"
+  if (!fs.existsSync(`${buildPath}/powersOfTau28_hez_final_08.ptau`)) {
+    const url = "https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_08.ptau"
 
     await download(url, buildPath)
   }
@@ -37,26 +37,26 @@ async function main() {
 
   await plonk.setup(
     `${buildPath}/circuit.r1cs`,
-    `${buildPath}/powersOfTau28_hez_final_14.ptau`,
-    `${buildPath}/circuit_final.zkey`,
+    `${buildPath}/powersOfTau28_hez_final_08.ptau`,
+    `${buildPath}/circuit_final_plonk.zkey`,
     logger
   )
 
   let verifierCode = await zKey.exportSolidityVerifier(
-    `${buildPath}/circuit_final.zkey`,
+    `${buildPath}/circuit_final_plonk.zkey`,
     { plonk: fs.readFileSync("./node_modules/snarkjs/templates/verifier_plonk.sol.ejs", "utf8") },
     logger
   )
   verifierCode = verifierCode.replace(/pragma solidity \^\d+\.\d+\.\d+/, `pragma solidity ^${solidityVersion}`)
 
-  fs.writeFileSync(`${config.paths.contracts}/Verifier.sol`, verifierCode, "utf-8")
+  fs.writeFileSync(`${config.paths.contracts}/PlonkVerifier.sol`, verifierCode, "utf-8")
 
-  const verificationKey = await zKey.exportVerificationKey(`${buildPath}/circuit_final.zkey`, logger)
-  fs.writeFileSync(`${buildPath}/verification_key.json`, JSON.stringify(verificationKey), "utf-8")
+  const verificationKey = await zKey.exportVerificationKey(`${buildPath}/circuit_final_plonk.zkey`, logger)
+  fs.writeFileSync(`${buildPath}/verification_key_plonk.json`, JSON.stringify(verificationKey), "utf-8")
 
   fs.renameSync(`${buildPath}/circuit_js/circuit.wasm`, `${buildPath}/circuit.wasm`)
   rimraf.sync(`${buildPath}/circuit_js`)
-  rimraf.sync(`${buildPath}/powersOfTau28_hez_final_14.ptau`)
+  rimraf.sync(`${buildPath}/powersOfTau28_hez_final_08.ptau`)
   rimraf.sync(`${buildPath}/circuit.r1cs`)
 }
 

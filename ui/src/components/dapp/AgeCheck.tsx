@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 
 import {
   Text,
@@ -10,6 +10,7 @@ import {
   Flex,
   Alert,
   FormHelperText,
+  Spinner,
 } from '@chakra-ui/react';
 
 import { getAgeCheckContract } from '@hooks/contractHelpers';
@@ -21,6 +22,8 @@ import { useWalletContext } from './WalletContext';
 const AgeCheck = () => {
   const [age, setAge] = React.useState<number>(19);
   const [error, setError] = React.useState<string | undefined>();
+  const [statusMsg, setStatusMsg] = React.useState<string | undefined>();
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [alert, setAlert] = React.useState<{ open: boolean; message: string }>({
     open: false,
     message: '',
@@ -45,6 +48,8 @@ const AgeCheck = () => {
           message: `Age Verified for ${truncateAddress(address)}`,
         });
         setAgeVerified(true);
+        setStatusMsg(undefined);
+        setLoading(false);
         return;
       }
       if (!isVerified && address === account) {
@@ -78,7 +83,8 @@ const AgeCheck = () => {
     if (ageCheckContract == null || provider == null) {
       return;
     }
-
+    setLoading(true);
+    setStatusMsg('Generating Proof');
     try {
       const [a, b, c, input] = await generateBroadcastParams({
         ...{
@@ -87,11 +93,14 @@ const AgeCheck = () => {
         },
       });
       setError(undefined);
+      setStatusMsg('Proof Generated..');
       const proof = [...a, ...b[0], ...b[1], ...c];
+
+      setStatusMsg('Verifying Proof..');
       try {
         const tx = await ageCheckContract
           .connect(provider.getSigner())
-          .verifyAge(proof, input);
+          .verifyUsingGroth(proof, input);
         if (tx?.hash) {
           setAlert({
             open: true,
@@ -103,9 +112,14 @@ const AgeCheck = () => {
           open: true,
           message: `Error sending transaction. Please try again!`,
         });
+        console.log(`Errror: ${e}`);
+        setStatusMsg(undefined);
+        setLoading(false);
       }
     } catch (e) {
       setError('Failed to generate proof, possibly age not valid.');
+      setStatusMsg('Invalid proof');
+      setLoading(false);
     }
   };
 
@@ -212,11 +226,11 @@ const AgeCheck = () => {
           disabled={!account}
           onChange={(e) => setAge(Number(e.target.value ?? 0))}
           isInvalid={!!error}
-          // helperText={!!error && error}
+          errorBorderColor="red.300"
           w="140px"
           style={{ marginRight: '8px' }}
         />
-        {error && <FormHelperText>{error}</FormHelperText>}
+
         <Button
           variant="solid"
           bg="black"
@@ -227,6 +241,10 @@ const AgeCheck = () => {
         >
           Verify Age
         </Button>
+      </Flex>
+      <Flex justifyContent="center" mt="8px">
+        <Text fontSize="lg">{statusMsg}</Text>
+        {isLoading && <Spinner />}
       </Flex>
     </div>
   );
