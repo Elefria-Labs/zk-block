@@ -17,7 +17,7 @@ export type WalletContextProviderType = {
   connectWallet: () => void;
   disconnect: () => void;
   switchNetwork: (networkId?: number) => void;
-  setNetwork: Dispatch<SetStateAction<number>>;
+  setNetwork: Dispatch<SetStateAction<number | undefined>>;
   web3Modal: Web3Modal | undefined;
 };
 

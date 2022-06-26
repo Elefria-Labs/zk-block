@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 
 import { Flex, FormControl, Select, Text } from '@chakra-ui/react';
 
-import { providers } from 'ethers';
-
 export type ProofType = {
   name: string;
   contractFunctionName: string;
