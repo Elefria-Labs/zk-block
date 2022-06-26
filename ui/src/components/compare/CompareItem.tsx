@@ -34,7 +34,7 @@ const CompareItem = (props: CompareItemPropsType) => {
   const [proofType, setProofType] = React.useState<ProofType | undefined>();
   const [error, setError] = React.useState<string | undefined>();
   const [statusMsg, setStatusMsg] = React.useState<string | undefined>();
-  const [statusTrail, setStatusTrail] = React.useState<string[] | undefined>();
+  const [statusTrail, setStatusTrail] = React.useState<any>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [alert, setAlert] = React.useState<{ open: boolean; message: string }>({
     open: false,
@@ -46,6 +46,11 @@ const CompareItem = (props: CompareItemPropsType) => {
     () => getContractByName(contractName, chainId ?? 1666700000),
     [chainId],
   );
+  let statusTemp: string[] = [];
+
+  const addToStatusTrail = (status: string) => {
+    setStatusTrail((p: any) => [...p, { msg: status }]);
+  };
 
   useEffect(() => {
     if (contractInstance == null || chainId == null || account == null) {
@@ -53,8 +58,6 @@ const CompareItem = (props: CompareItemPropsType) => {
     }
 
     contractInstance.on('AgeVerfied', (address, isVerified) => {
-      console.log('teste herer.........');
-
       if (isVerified && address === account) {
         setAlert({
           open: true,
@@ -93,15 +96,16 @@ const CompareItem = (props: CompareItemPropsType) => {
   }, [account, getAgeVerificationStatus, chainId, contractInstance]);
 
   const handleVerify = async () => {
-    console.log('he..', proofType);
     if (contractInstance == null || provider == null || proofType == null) {
       return;
     }
-    console.log('here....');
+
+    statusTemp = [];
     setLoading(true);
+
     setStatusMsg(`Generating ${proofType.name} Proof`);
     const startTime = Date.now();
-    let timeForProof;
+    let timeForProof: number;
     try {
       const [a, b, c, input] = await generateBroadcastParams({
         ...{
@@ -112,22 +116,45 @@ const CompareItem = (props: CompareItemPropsType) => {
 
       const endTime = Date.now();
       timeForProof = (endTime - startTime) / 1000;
-      setStatusTrail([`${proofType.name} Proof Generated in ${timeForProof}s`]);
+      addToStatusTrail(`${proofType.name} Proof Generated in ${timeForProof}s`);
+      // setStatusTrail((p: any) => [
+      //   ...p,
+      //   `${proofType.name} Proof Generated in ${timeForProof}s`,
+      // ]);
+
       setError(undefined);
 
       setStatusMsg('Proof Generated..');
       const proof = [...a, ...b[0], ...b[1], ...c];
+
+      const gas = await provider.getGasPrice();
+      const estimate = await contractInstance.estimateGas.verifyUsingGroth(
+        proof,
+        input,
+        { gasPrice: gas },
+      );
+      addToStatusTrail(`Gas estimate ${estimate}`);
+      // setStatusTrail((p: any) => [...p, `Gas estimate ${estimate}`]);
 
       setStatusMsg('Verifying Proof..');
       try {
         const tx = await contractInstance
           .connect(provider.getSigner())
           .verifyUsingGroth(proof, input);
+
         if (tx?.hash) {
           setAlert({
             open: true,
             message: `Transaction broadcasted with hash ${tx.hash}`,
           });
+          const receipt = await tx.wait();
+          const gasUsed = receipt.gasUsed;
+          addToStatusTrail(`Actual gas used ${gasUsed}`);
+
+          // setStatusTrail((p: any) => [...p, `Acutal Gas used ${gasUsed}`]);
+          statusTemp.push(
+            `${proofType.name} Proof Generated in ${timeForProof}s`,
+          );
         }
       } catch (e) {
         setAlert({
@@ -164,17 +191,23 @@ const CompareItem = (props: CompareItemPropsType) => {
         },
         true,
       );
-      console.log(`params`, params[0]);
-      console.log(`params`, params[1]);
 
       const endTime = Date.now();
       timeForProof = (endTime - startTime) / 1000;
-      setStatusTrail([`${proofType.name} Proof Generated in ${timeForProof}s`]);
+      addToStatusTrail(`${proofType.name} Proof Generated in ${timeForProof}s`);
       setError(undefined);
 
       setStatusMsg('Proof Generated..');
-
       setStatusMsg('Verifying Proof..');
+
+      const gas = await provider.getGasPrice();
+      const estimate = await contractInstance.estimateGas.verifyUsingPlonk(
+        params[0],
+        params[1],
+        { gasPrice: gas },
+      );
+      addToStatusTrail(`Gas estimate ${estimate}`);
+
       try {
         const tx = await contractInstance
           .connect(provider.getSigner())
@@ -184,6 +217,9 @@ const CompareItem = (props: CompareItemPropsType) => {
             open: true,
             message: `Transaction broadcasted with hash ${tx.hash}`,
           });
+          const receipt = await tx.wait();
+          const gasUsed = receipt.gasUsed;
+          addToStatusTrail(`Actual gas used ${gasUsed}`);
         }
       } catch (e) {
         setAlert({
@@ -230,6 +266,7 @@ const CompareItem = (props: CompareItemPropsType) => {
     }
     setProofType(value);
   };
+
   const AgeVerfiedText = React.memo(() => {
     if (account == null) {
       return null;
@@ -355,9 +392,12 @@ const CompareItem = (props: CompareItemPropsType) => {
         </Text>
       </Flex>
       <Flex flexDirection="column" justifyContent="center" mt="8px">
-        {statusTrail?.map((s) => (
-          <Text fontSize="lg">{s}</Text>
+        {statusTrail?.map((s: any) => (
+          <Text fontSize="lg" key={s.msg}>
+            {s.msg}
+          </Text>
         ))}
+
         <Flex justifyContent="center" mt="8px">
           <Text fontSize="lg">{statusMsg}</Text>
           {isLoading && <Spinner />}

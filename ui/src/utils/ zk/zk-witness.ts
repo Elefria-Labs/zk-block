@@ -66,7 +66,7 @@ export async function generateBroadcastParams(
     editedProof,
     editedPublicSignals,
   );
-  console.log('editedPublicSignals.........', editedPublicSignals);
+
   return JSON.parse(`[${callData}]`);
 }
 
@@ -84,52 +84,24 @@ export async function generatePlonkBroadcastParams(
   const provingKey = await fetch(isPlonk ? plonkZkey : zkey);
   const provingKeyBuffer = await provingKey.arrayBuffer();
 
-  if (isPlonk) {
-    const { proof, publicSignals } = await snarkjs.plonk.prove(
-      new Uint8Array(provingKeyBuffer),
-      buff,
-    );
-
-    console.log('proof.........', proof);
-    console.log('publicSignals.........', publicSignals);
-    // TODO update snarkjs library, this is no longer required
-    const editedPublicSignals = unstringifyBigInts(publicSignals);
-    // const editedProof = unstringifyBigInts(proof);
-
-    // console.log('here.........', editedProof);
-    console.log('here.........', editedPublicSignals);
-
-    const callData = await snarkjs.plonk.exportSolidityCallData(
-      proof,
-      editedPublicSignals,
-    );
-    console.log('callldate........', callData);
-    // VERY HACKY UPDATE LIB
-    console.log('oh baby', [
-      callData.split(',')[0],
-      JSON.parse(callData.slice(callData.indexOf(',') + 1)),
-    ]);
-    return [
-      callData.split(',')[0],
-      JSON.parse(callData.slice(callData.indexOf(',') + 1)),
-    ];
-  }
-
-  const { proof, publicSignals } = await snarkjs.groth16.prove(
+  const { proof, publicSignals } = await snarkjs.plonk.prove(
     new Uint8Array(provingKeyBuffer),
     buff,
-    null,
   );
 
+  // TODO update snarkjs library, this is no longer required
   const editedPublicSignals = unstringifyBigInts(publicSignals);
-  const editedProof = unstringifyBigInts(proof);
 
-  const callData = await snarkjs.groth16.exportSolidityCallData(
-    editedProof,
+  const callData = await snarkjs.plonk.exportSolidityCallData(
+    proof,
     editedPublicSignals,
   );
 
-  return JSON.parse(`[${callData}]`);
+  // VERY HACKY UPDATE LIB
+  return [
+    callData.split(',')[0],
+    JSON.parse(callData.slice(callData.indexOf(',') + 1)),
+  ];
 }
 
 export async function generatePlonkBroadcastParams(
