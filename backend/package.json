@@ -60,7 +60,7 @@
     "prettier": "^2.5.1",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
     "rimraf": "^3.0.2",
-    "snarkjs": "^0.4.13",
+    "snarkjs": "^0.4.19",
     "solhint": "^3.3.6",
     "solhint-plugin-prettier": "^0.0.5",
     "solidity-coverage": "^0.7.18",
@@ -87,5 +87,10 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@matterlabs/hardhat-zksync-deploy": "^0.1.5",
+    "@matterlabs/hardhat-zksync-solc": "^0.3.2",
+    "zksync-web3": "^0.4.0"
+  }
 }

@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 import { Box, Container, Divider, Flex, Heading, Text } from '@chakra-ui/react';
+=======
+import { Box, Container, Flex } from '@chakra-ui/react';
+>>>>>>> db68b24 (feat: init)
+=======
+import { Box, Container, Divider, Flex, Heading, Text } from '@chakra-ui/react';
+>>>>>>> c7464d9 (feat: minor updates)
 import { Meta } from '@layout/Meta';
 import { Main } from '@templates/Main';
 import WalletConnectComponent from '@components/dapp/WalletConnection';
@@ -49,6 +57,10 @@ const Compare = () => {
               <Box>
                 <WalletConnectComponent />
               </Box>
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c7464d9 (feat: minor updates)
 
               <Box py={'16px'} color="gray.200">
                 <Heading
@@ -72,6 +84,7 @@ const Compare = () => {
                   </Text>
                 </Text>
               )}
+<<<<<<< HEAD
               <Flex>
                 {isAllOkay && (
                   <>
@@ -87,6 +100,37 @@ const Compare = () => {
                     <EmptyItem onSelect={handleOnAddToCompareList} />
                   </>
                 )}
+=======
+              <Flex>
+                {isAllOkay &&
+                  compareList.map((contract: string, i) => (
+                    <CompareItem
+                      key={`${contract}-${i}`}
+                      account={account}
+                      chainId={chainId}
+                      provider={provider}
+                      contractName={contract}
+                    />
+                  ))}
+                <EmptyItem onSelect={handleOnAddToCompareList} />
+>>>>>>> db68b24 (feat: init)
+=======
+              <Flex>
+                {isAllOkay && (
+                  <>
+                    {compareList.map((contract: string, i) => (
+                      <CompareItem
+                        key={`${contract}-${i}`}
+                        account={account}
+                        chainId={chainId}
+                        provider={provider}
+                        contractName={contract}
+                      />
+                    ))}
+                    <EmptyItem onSelect={handleOnAddToCompareList} />
+                  </>
+                )}
+>>>>>>> c7464d9 (feat: minor updates)
               </Flex>
             </Box>
           </Box>
