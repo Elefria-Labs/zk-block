@@ -20,7 +20,7 @@ export const useWalletModal = () => {
   const hasWindow = typeof window !== 'undefined';
   const [web3Modal, setWeb3Modal] = useState<Web3Modal | undefined>();
   useEffect(() => {
-    if (hasWindow) {
+    if (hasWindow && web3Modal == null) {
       setWeb3Modal(
         new Web3Modal({
           cacheProvider: true, // optional
@@ -40,7 +40,7 @@ export const useWalletConnect = () => {
   const [account, setAccount] = useState<string | undefined>();
   const [error, setError] = useState('');
   const [chainId, setChainId] = useState<number | undefined>();
-  const [network, setNetwork] = useState<number>(8001);
+  const [network, setNetwork] = useState<number | undefined>(8001);
 
   const web3Modal: Web3Modal | undefined = useWalletModal();
 
@@ -98,7 +98,7 @@ export const useWalletConnect = () => {
   const refreshState = () => {
     setAccount('');
     setChainId(undefined);
-    setNetwork(networkOptions?.[0].chainId);
+    setNetwork(undefined);
   };
   const disconnect = useCallback(async () => {
     if (web3Modal == null) {

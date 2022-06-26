@@ -99,6 +99,11 @@ const Index = () => {
                     zk Age Verification
                   </Button>
                 </Link>
+                <Link href="/compare" passHref>
+                  <Button bg="black" color="white" _hover={{ bg: 'gray.600' }}>
+                    Compare Proofs
+                  </Button>
+                </Link>
                 <Link href="" passHref>
                   <Button
                     disabled

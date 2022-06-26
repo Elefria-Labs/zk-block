@@ -9290,6 +9290,16 @@ ffjavascript@0.2.48, ffjavascript@^0.2.46:
     wasmcurves "0.1.0"
     web-worker "^1.2.0"
 
+ffjavascript@0.2.54:
+  version "0.2.54"
+  resolved "https://registry.yarnpkg.com/ffjavascript/-/ffjavascript-0.2.54.tgz#b81a3a84dc140566dd2bca832a78d8be29e9e4ce"
+  integrity sha512-VeQmR805zaDxLALu/0FlO0OfmE3MOHvPEmEPUdlinRk7kBydgdthSQSSaHZ/OlZ1DwiiGvfiKmNgNpUq4zr+XQ==
+  dependencies:
+    big-integer "^1.6.48"
+    wasmbuilder "^0.0.12"
+    wasmcurves "0.1.0"
+    web-worker "^1.2.0"
+
 ffjavascript@^0.2.48:
   version "0.2.52"
   resolved "https://registry.yarnpkg.com/ffjavascript/-/ffjavascript-0.2.52.tgz#bbe1cc7448df3b0ddd9f1a385e6fd27bf8432982"
@@ -15957,17 +15967,17 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-snarkjs@^0.4.16:
-  version "0.4.16"
-  resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.4.16.tgz#d855e0a16f053806e514d12b8600c4f4b3f0eb97"
-  integrity sha512-Q5nTANzZNp2VI/2ZLeWazioYs4P2tn0gzQfG/fctibLEZh8UgF2RX1xst42CFw6WrsytB8WqPRH1JghN5OrEyg==
+snarkjs@^0.4.19:
+  version "0.4.19"
+  resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.4.19.tgz#536a969e9ed606c66a4706bec49db1c53326e206"
+  integrity sha512-QNEcPevBG5zB8U+PtmZ7EmH7Dr0b9kuuy8NjraT/o9ute15k34VAh/aCRAbRMtUSIoqwxS5WYKjk8vEbHzqFJw==
   dependencies:
     "@iden3/binfileutils" "0.0.10"
     blake2b-wasm "^2.4.0"
     circom_runtime "0.1.17"
     ejs "^3.1.6"
     fastfile "0.0.19"
-    ffjavascript "0.2.48"
+    ffjavascript "0.2.54"
     js-sha3 "^0.8.0"
     logplease "^1.2.15"
     r1csfile "0.0.35"

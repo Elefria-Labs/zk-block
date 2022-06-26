@@ -10,13 +10,15 @@ describe("AgeCheck", () => {
 
   before(async () => {
     const verifierContract = await ethers.getContractFactory("Verifier")
+    const plonkVerifierContract = await ethers.getContractFactory("PlonkVerifier")
     accounts = await ethers.getSigners()
 
     const verifierDeployed = await verifierContract.deploy()
+    const plonkVerifierDeployed = await plonkVerifierContract.deploy()
     console.log("verifierContract", verifierDeployed.address)
 
     const ageCheck = await ethers.getContractFactory("AgeCheck")
-    ageCheckContract = await ageCheck.deploy(verifierDeployed.address)
+    ageCheckContract = await ageCheck.deploy(verifierDeployed.address, plonkVerifierDeployed.address)
     console.log("ageCheckContract", ageCheckContract.address)
   })
 

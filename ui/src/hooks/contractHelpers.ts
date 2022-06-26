@@ -4,7 +4,11 @@ import { ethers } from 'ethers';
 
 import AgeCheckContract from '../abi/AgeCheck.json';
 import { AgeCheck } from '../types/contracts/AgeCheck';
-import { getAgeCheckAddress } from './addressHelpers';
+import { getAgeCheckAddress, getContractAddressByName } from './addressHelpers';
+
+const getAbiByContractName: Record<string, any> = {
+  ageCheck: AgeCheckContract.abi,
+};
 
 export const getRpcUrlByChainId = (chainId: number): string => {
   const networkRpc = networkConfig[toHex(chainId).toString()].rpcUrls[0];
@@ -29,4 +33,15 @@ export const getAgeCheckContract = (chainId: number) => {
     console.log(`Error getting contract for the chainId ${chainId}`);
   }
   return undefined;
+};
+
+export const getContractByName = (contractName: string, chainId: number) => {
+  try {
+    const contractAddr = getContractAddressByName(contractName, chainId);
+    const contractAbi = getAbiByContractName[contractName];
+    // TODO dynamic type
+    return getContract(contractAbi, contractAddr, chainId) as AgeCheck;
+  } catch (e) {
+    console.log(`Error getting contract for the chainId ${chainId}`);
+  }
 };

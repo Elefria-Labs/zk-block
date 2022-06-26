@@ -22,7 +22,8 @@ export interface AgeCheckInterface extends utils.Interface {
   functions: {
     'getVerficationStatus(address)': FunctionFragment;
     'setVerficationStatus(bool)': FunctionFragment;
-    'verifyAge(uint256[8],uint256[2])': FunctionFragment;
+    'verifyUsingGroth(uint256[8],uint256[2])': FunctionFragment;
+    'verifyUsingPlonk(bytes,uint256[])': FunctionFragment;
   };
 
   encodeFunctionData(
@@ -34,8 +35,12 @@ export interface AgeCheckInterface extends utils.Interface {
     values: [boolean],
   ): string;
   encodeFunctionData(
-    functionFragment: 'verifyAge',
+    functionFragment: 'verifyUsingGroth',
     values: [BigNumberish[], [BigNumberish, BigNumberish]],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'verifyUsingPlonk',
+    values: [BytesLike, BigNumberish[]],
   ): string;
 
   decodeFunctionResult(
@@ -46,7 +51,14 @@ export interface AgeCheckInterface extends utils.Interface {
     functionFragment: 'setVerficationStatus',
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(functionFragment: 'verifyAge', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'verifyUsingGroth',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'verifyUsingPlonk',
+    data: BytesLike,
+  ): Result;
 
   events: {
     'AgeVerfied(address,bool)': EventFragment;
@@ -100,9 +112,15 @@ export interface AgeCheck extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    verifyAge(
+    verifyUsingGroth(
       _proof: BigNumberish[],
       _input: [BigNumberish, BigNumberish],
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>;
+
+    verifyUsingPlonk(
+      _proof: BytesLike,
+      _pubSignals: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
   };
@@ -117,9 +135,15 @@ export interface AgeCheck extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  verifyAge(
+  verifyUsingGroth(
     _proof: BigNumberish[],
     _input: [BigNumberish, BigNumberish],
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>;
+
+  verifyUsingPlonk(
+    _proof: BytesLike,
+    _pubSignals: BigNumberish[],
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
@@ -134,19 +158,28 @@ export interface AgeCheck extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    verifyAge(
+    verifyUsingGroth(
       _proof: BigNumberish[],
       _input: [BigNumberish, BigNumberish],
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    verifyUsingPlonk(
+      _proof: BytesLike,
+      _pubSignals: BigNumberish[],
       overrides?: CallOverrides,
     ): Promise<void>;
   };
 
   filters: {
     'AgeVerfied(address,bool)'(
-      person?: null,
-      verfied?: null,
+      person?: string | null,
+      verfied?: boolean | null,
     ): AgeVerfiedEventFilter;
-    AgeVerfied(person?: null, verfied?: null): AgeVerfiedEventFilter;
+    AgeVerfied(
+      person?: string | null,
+      verfied?: boolean | null,
+    ): AgeVerfiedEventFilter;
   };
 
   estimateGas: {
@@ -160,9 +193,15 @@ export interface AgeCheck extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    verifyAge(
+    verifyUsingGroth(
       _proof: BigNumberish[],
       _input: [BigNumberish, BigNumberish],
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>;
+
+    verifyUsingPlonk(
+      _proof: BytesLike,
+      _pubSignals: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
   };
@@ -178,9 +217,15 @@ export interface AgeCheck extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    verifyAge(
+    verifyUsingGroth(
       _proof: BigNumberish[],
       _input: [BigNumberish, BigNumberish],
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>;
+
+    verifyUsingPlonk(
+      _proof: BytesLike,
+      _pubSignals: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
   };
