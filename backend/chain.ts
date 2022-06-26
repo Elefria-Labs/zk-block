@@ -209,5 +209,50 @@ export const chainConfig = {
         }
       ]
     }
+  },
+  zksync: {
+    testnet: {
+      name: "zkSync alpha testnet",
+      chainName: "ZkSync",
+      rpc: ["https://zksync2-testnet.zksync.dev"],
+      faucets: ["https://portal.zksync.io/bridge/faucet"],
+      nativeCurrency: {
+        name: "Ethereum",
+        symbol: "ETH",
+        decimals: 18
+      },
+      infoURL: "https://v2-docs.zksync.io/dev/testnet/important-links.html",
+      shortName: "zksync",
+      chainId: 280,
+      networkId: 280,
+      explorers: [
+        {
+          name: "ZkSync Block Explorer",
+          url: "https://zksync2-testnet.zkscan.io/"
+        }
+      ]
+    },
+    // please do not use the below config
+    mainnet: {
+      name: "zkSync alpha testnet",
+      chainName: "ZkSync",
+      rpc: ["https://zksync2-testnet.zksync.dev"],
+      faucets: ["https://portal.zksync.io/bridge/faucet"],
+      nativeCurrency: {
+        name: "Ethereum",
+        symbol: "ETH",
+        decimals: 18
+      },
+      infoURL: "https://v2-docs.zksync.io/dev/testnet/important-links.html",
+      shortName: "zksync",
+      chainId: 280,
+      networkId: 280,
+      explorers: [
+        {
+          name: "ZkSync Block Explorer",
+          url: "https://zksync2-testnet.zkscan.io/"
+        }
+      ]
+    }
   }
 }
