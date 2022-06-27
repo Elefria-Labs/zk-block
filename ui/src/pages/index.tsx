@@ -104,6 +104,11 @@ const Index = () => {
                     Compare Proofs
                   </Button>
                 </Link>
+                <Link href="/voting" passHref>
+                  <Button bg="black" color="white" _hover={{ bg: 'gray.600' }}>
+                    Voting ( using Semaphore)
+                  </Button>
+                </Link>
                 <Link href="" passHref>
                   <Button
                     disabled
