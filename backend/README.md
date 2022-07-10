@@ -40,3 +40,11 @@ Select network - `chain.ts` contains network configuration. Network selected for
 Run below command to deploy
 
 `yarn deploy:agecheck --network testnet`
+
+#### Testnet Addresses
+
+- Poseidon3 - 0x87BbbFD587A5A1200B712715A37aA5c98D24d68b
+- IncrementalBinTree - 0x2237458fCC956F787d5dedCfd7AD77d28Ad3e455
+- Verifier Address - 0x04D88583d8cc4e8e6597CD2850e096572B27F07d
+- Voting Contract - 0xDaC7C69F0C3ef580344801142dc9d87021CEBB98
+- 0x708513fb4C817b0438FE874737b8AC55D3bb3186

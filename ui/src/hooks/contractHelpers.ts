@@ -1,8 +1,10 @@
 import { networkConfig } from '@config/network';
+import { Voting } from '@types/contracts/Voting';
 import { toHex } from '@utils/wallet';
 import { ethers } from 'ethers';
 
 import AgeCheckContract from '../abi/AgeCheck.json';
+import VotingContract from '../abi/Voting.json';
 import { AgeCheck } from '../types/contracts/AgeCheck';
 import { getAgeCheckAddress, getContractAddressByName } from './addressHelpers';
 
@@ -31,6 +33,15 @@ export const getAgeCheckContract = (chainId: number) => {
     return getContract(AgeCheckContract.abi, contractAddr, chainId) as AgeCheck;
   } catch (e) {
     console.log(`Error getting contract for the chainId ${chainId}`);
+  }
+  return undefined;
+};
+export const getVotingContract = (chainId: number) => {
+  try {
+    const contractAddr = getContractAddressByName('voting', chainId);
+    return getContract(VotingContract.abi, contractAddr, chainId) as Voting;
+  } catch (e) {
+    console.log(`Error getting contract for the chainId ${chainId}`, e);
   }
   return undefined;
 };

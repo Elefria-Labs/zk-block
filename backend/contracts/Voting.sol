@@ -12,10 +12,9 @@ interface IVerifier {
   ) external view returns (bool);
 }
 
-/// @title Semaphore voting contract.
-/// @dev The following code allows you to create polls, add voters and allow them to vote anonymously.
-contract SemaphoreVoting {
-    /// @dev Gets a tree depth and returns its verifier address.
+
+contract Voting {
+
     mapping(uint8 => IVerifier) internal verifiers;
 
     enum PollStatus{
@@ -27,20 +26,23 @@ contract SemaphoreVoting {
     struct Poll {
         uint pollId;
         PollStatus pollStatus;
-        string pollTitle;
+        string title;
         address creator;
         uint quorum;
         uint[] votes; // 0 or 1
+        uint createdAt;
     }
 
     using IncrementalBinaryTree for IncrementalTreeData;
     uint256 constant SNARK_SCALAR_FIELD = 21888242871839275222246405745257275088548364400416034343698204186575808495617;
     uint256 constant TREE_ZERO_VALUE = uint256(keccak256(abi.encodePacked("Semaphore"))) % SNARK_SCALAR_FIELD;
     uint8 constant DEPTH = 20; 
-    uint pollIdCounter;
+    uint public pollIdCounter;
+    uint[] public pollIds;
     
     mapping(uint256 => Poll) public polls;
-    mapping(uint256 => bool) public registeredCommitments;
+    mapping(uint256 => bool) public registeredCommitmentsMapping;
+    uint[] public registeredCommitments;
     mapping(uint256 => bool) public nullifierHashes;
     IncrementalTreeData public commitmentTree;
     IVerifier zkVerfier;
@@ -52,7 +54,7 @@ contract SemaphoreVoting {
     event PollEnded(uint indexed, address indexed);
     event Voted(uint indexed,uint indexed);
 
-    constructor(address _verifier) public {
+    constructor(address _verifier) {
         commitmentTree.init(DEPTH, TREE_ZERO_VALUE);
          zkVerfier =IVerifier(_verifier);
        
@@ -64,38 +66,37 @@ contract SemaphoreVoting {
         _;
     }
 
-    /// @dev See {ISemaphoreVoting-createPoll}.
+    // TODO verify zkp here as well
+    // ATM anyone can create the poll 
     function createPoll(
         uint256 _identityCommitment,
         string memory _title,
         uint _quorum
     ) public  {
-        require(registeredCommitments[_identityCommitment],"No commitment");
+        require(registeredCommitmentsMapping[_identityCommitment],"No commitment");
         Poll memory poll;
 
         poll.creator = msg.sender;
         poll.pollId = pollIdCounter;
+        poll.title = _title;
         poll.quorum=_quorum;
+        poll.createdAt=block.timestamp;
         poll.pollStatus=PollStatus.Created;
         polls[pollIdCounter] = poll;
+        pollIds.push(pollIdCounter);
         pollIdCounter+=1;
         emit PollCreated(pollIdCounter,  msg.sender);
     }
 
-      function addVoter(uint256 _identityCommitment) public {
-        require(registeredCommitments[_identityCommitment]==false,"Duplicate commitment");
+      function regsiterCommitment(uint256 _identityCommitment) public {
+        require(registeredCommitmentsMapping[_identityCommitment]==false,"Duplicate commitment");
         
-        registeredCommitments[_identityCommitment]=true;
+        registeredCommitmentsMapping[_identityCommitment]=true;
         commitmentTree.insert(_identityCommitment);
+        registeredCommitments.push(_identityCommitment);
          emit CommitmentRegistered(msg.sender,_identityCommitment);
     }
 
-    // function addVoter(uint256 pollId, uint256 identityCommitment) public override onlyCreator(pollId) {
-    //     require(polls[pollId].state == PollState.Created, "SemaphoreVoting: voters can only be added before voting");
-
-    //     _addMember(pollId, identityCommitment);
-    // }
-    
 
     
     function startPoll(uint256 pollId) public onlyCreator(pollId) {
@@ -107,15 +108,15 @@ contract SemaphoreVoting {
     }
 
     function castVote(
-        bytes32 _vote,
+        uint256 _vote,
         uint256 _nullifierHash,
         uint256 _pollId,
         uint256[8] calldata _proof,uint256[2] calldata _input
     ) public {
-        Poll memory poll = polls[_pollId];
+        Poll storage poll = polls[_pollId];
 
         require(poll.pollStatus == PollStatus.Started, "Poll not started");
-        require(nullifierHashes[_nullifierHash] == true, "Invalid nullifier");
+        require(nullifierHashes[_nullifierHash] == false, "Invalid nullifier");
 
          zkVerfier.verifyProof(
         [_proof[0], _proof[1]],
@@ -125,8 +126,7 @@ contract SemaphoreVoting {
       );
         // Prevent double-voting (nullifierHash = hash(pollId + identityNullifier)).
         nullifierHashes[_nullifierHash]=true;
-        // TODO fix
-        uint[] storage votes = polls[_pollId].votes;
+        polls[_pollId].votes.push(_vote);
         
         emit Voted(_pollId, _vote);
     }
@@ -138,5 +138,31 @@ contract SemaphoreVoting {
         polls[pollId].pollStatus = PollStatus.Ended;
 
         emit PollEnded(pollId,msg.sender );
+    }
+
+    function getPolls() public view returns (uint[] memory){
+        return pollIds;
+    }
+
+
+
+    function getAllPolls() public view returns (Poll[] memory){
+        
+         Poll[] memory allPolls = new Poll[](pollIds.length);
+        
+        for(uint i =0;i<pollIdCounter;++i){
+                allPolls[i]=polls[i];
+        }
+
+        return allPolls;
+    }
+
+
+     function getPollDetailsById(uint _pollId) public view returns (Poll memory){
+        return polls[_pollId];
+    }
+
+  function getRegisteredCommitments(uint _pollId) public view returns (uint[] memory){
+        return registeredCommitments;
     }
 }

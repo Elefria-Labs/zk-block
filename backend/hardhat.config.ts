@@ -11,14 +11,14 @@ import "solidity-coverage"
 import { config } from "./package.json"
 import KEYS from "./private.json"
 import "./tasks/deploy-age-check"
-// dotenvConfig({ path: resolve(__dirname, "./.env") })
+import "./tasks/deploy-voting"
 
 function getNetworks(): NetworksUserConfig | undefined {
   const infuraApiKey = process.env.INFURA_API_KEY
   const TESTNET_PRIVATE_KEY = KEYS.privateKey
   // const MAINNET_PRIVATE_KEY = KEYS.privateKey
 
-  const selectedNetwork = "polygon" // check chain.ts file to deploy on particular network
+  const selectedNetwork = "one" // check chain.ts file to deploy on particular network
   const accounts = [`0x${TESTNET_PRIVATE_KEY}`]
 
   return {

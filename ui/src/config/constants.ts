@@ -10,6 +10,10 @@ export const contractAddresses: Record<string, Record<string, string>> = {
     '137': '0xB9B1E14aC876a6997734119E734A02f1720fbA78', // replace with mainnet addr
     '80001': '0x841a8095c99762Ac3cdBFda59a31af5ae8C2101D', // testnet
   },
+  voting: {
+    '80001': '0x708513fb4C817b0438FE874737b8AC55D3bb3186',
+    '1666900000': '0x641d9f202378e8da32d04210f709F3e6D8CC2c63',
+  },
   // add more contract addresses here...
 };
 

@@ -16,7 +16,7 @@ import { getContractByName } from '@hooks/contractHelpers';
 import {
   generateBroadcastParams,
   generatePlonkBroadcastParams,
-} from '@utils/ zk/zk-witness';
+} from '@utils/zk/zk-witness';
 import { truncateAddress } from '@utils/wallet';
 import { providers } from 'ethers';
 import ProofSelect, { ProofType } from './ProofSelect';
@@ -107,12 +107,15 @@ const CompareItem = (props: CompareItemPropsType) => {
     const startTime = Date.now();
     let timeForProof: number;
     try {
-      const [a, b, c, input] = await generateBroadcastParams({
-        ...{
-          ageLimit: 18,
-          age,
+      const [a, b, c, input] = await generateBroadcastParams(
+        {
+          ...{
+            ageLimit: 18,
+            age,
+          },
         },
-      });
+        'circuit',
+      );
 
       const endTime = Date.now();
       timeForProof = (endTime - startTime) / 1000;

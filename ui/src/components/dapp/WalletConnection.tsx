@@ -6,7 +6,7 @@ import { networkOptions } from '@hooks/useWalletConnect';
 import { truncateAddress } from '@utils/wallet';
 import { useWalletContext } from './WalletContext';
 
-const supportedChains = Object.keys(contractAddresses.ageCheck ?? {});
+const supportedChains = Object.keys(contractAddresses.voting ?? {});
 
 const WalletConnectComponent = () => {
   const {

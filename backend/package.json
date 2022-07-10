@@ -13,6 +13,7 @@
     "compile:circuits": "ts-node scripts/compile-circuits.ts",
     "compile:pks": "ts-node scripts/compile-circuits-plonk.ts",
     "deploy:agecheck": "hardhat deploy:ageCheck",
+    "deploy:voting": "hardhat deploy:voting",
     "test": "hardhat test",
     "test:report-gas": "REPORT_GAS=true hardhat test",
     "test:coverage": "hardhat coverage",
