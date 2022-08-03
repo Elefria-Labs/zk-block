@@ -50,18 +50,20 @@ export declare namespace Voting {
 export interface VotingInterface extends utils.Interface {
   contractName: 'Voting';
   functions: {
-    'castVote(uint256,uint256,uint256,uint256[8],uint256[2])': FunctionFragment;
+    'castVote(uint256,uint256,uint256,uint256[8],uint256[4])': FunctionFragment;
     'commitmentTree()': FunctionFragment;
     'createPoll(uint256,string,uint256)': FunctionFragment;
     'endPoll(uint256)': FunctionFragment;
     'getAllPolls()': FunctionFragment;
     'getPollDetailsById(uint256)': FunctionFragment;
     'getPolls()': FunctionFragment;
+    'getRegisteredCommitments()': FunctionFragment;
     'nullifierHashes(uint256)': FunctionFragment;
     'pollIdCounter()': FunctionFragment;
     'pollIds(uint256)': FunctionFragment;
     'polls(uint256)': FunctionFragment;
     'registeredCommitments(uint256)': FunctionFragment;
+    'registeredCommitmentsMapping(uint256)': FunctionFragment;
     'regsiterCommitment(uint256)': FunctionFragment;
     'startPoll(uint256)': FunctionFragment;
   };
@@ -73,7 +75,7 @@ export interface VotingInterface extends utils.Interface {
       BigNumberish,
       BigNumberish,
       BigNumberish[],
-      [BigNumberish, BigNumberish],
+      [BigNumberish, BigNumberish, BigNumberish, BigNumberish],
     ],
   ): string;
   encodeFunctionData(
@@ -98,6 +100,10 @@ export interface VotingInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: 'getPolls', values?: undefined): string;
   encodeFunctionData(
+    functionFragment: 'getRegisteredCommitments',
+    values?: undefined,
+  ): string;
+  encodeFunctionData(
     functionFragment: 'nullifierHashes',
     values: [BigNumberish],
   ): string;
@@ -112,6 +118,10 @@ export interface VotingInterface extends utils.Interface {
   encodeFunctionData(functionFragment: 'polls', values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: 'registeredCommitments',
+    values: [BigNumberish],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'registeredCommitmentsMapping',
     values: [BigNumberish],
   ): string;
   encodeFunctionData(
@@ -140,6 +150,10 @@ export interface VotingInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: 'getPolls', data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: 'getRegisteredCommitments',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
     functionFragment: 'nullifierHashes',
     data: BytesLike,
   ): Result;
@@ -151,6 +165,10 @@ export interface VotingInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: 'polls', data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: 'registeredCommitments',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'registeredCommitmentsMapping',
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
@@ -243,7 +261,7 @@ export interface Voting extends BaseContract {
       _nullifierHash: BigNumberish,
       _pollId: BigNumberish,
       _proof: BigNumberish[],
-      _input: [BigNumberish, BigNumberish],
+      _input: [BigNumberish, BigNumberish, BigNumberish, BigNumberish],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
@@ -278,6 +296,8 @@ export interface Voting extends BaseContract {
 
     getPolls(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
+    getRegisteredCommitments(overrides?: CallOverrides): Promise<[BigNumber[]]>;
+
     nullifierHashes(
       arg0: BigNumberish,
       overrides?: CallOverrides,
@@ -307,6 +327,11 @@ export interface Voting extends BaseContract {
     registeredCommitments(
       arg0: BigNumberish,
       overrides?: CallOverrides,
+    ): Promise<[BigNumber]>;
+
+    registeredCommitmentsMapping(
+      arg0: BigNumberish,
+      overrides?: CallOverrides,
     ): Promise<[boolean]>;
 
     regsiterCommitment(
@@ -325,7 +350,7 @@ export interface Voting extends BaseContract {
     _nullifierHash: BigNumberish,
     _pollId: BigNumberish,
     _proof: BigNumberish[],
-    _input: [BigNumberish, BigNumberish],
+    _input: [BigNumberish, BigNumberish, BigNumberish, BigNumberish],
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
@@ -358,6 +383,8 @@ export interface Voting extends BaseContract {
 
   getPolls(overrides?: CallOverrides): Promise<BigNumber[]>;
 
+  getRegisteredCommitments(overrides?: CallOverrides): Promise<BigNumber[]>;
+
   nullifierHashes(
     arg0: BigNumberish,
     overrides?: CallOverrides,
@@ -384,6 +411,11 @@ export interface Voting extends BaseContract {
   registeredCommitments(
     arg0: BigNumberish,
     overrides?: CallOverrides,
+  ): Promise<BigNumber>;
+
+  registeredCommitmentsMapping(
+    arg0: BigNumberish,
+    overrides?: CallOverrides,
   ): Promise<boolean>;
 
   regsiterCommitment(
@@ -402,7 +434,7 @@ export interface Voting extends BaseContract {
       _nullifierHash: BigNumberish,
       _pollId: BigNumberish,
       _proof: BigNumberish[],
-      _input: [BigNumberish, BigNumberish],
+      _input: [BigNumberish, BigNumberish, BigNumberish, BigNumberish],
       overrides?: CallOverrides,
     ): Promise<void>;
 
@@ -432,6 +464,8 @@ export interface Voting extends BaseContract {
 
     getPolls(overrides?: CallOverrides): Promise<BigNumber[]>;
 
+    getRegisteredCommitments(overrides?: CallOverrides): Promise<BigNumber[]>;
+
     nullifierHashes(
       arg0: BigNumberish,
       overrides?: CallOverrides,
@@ -456,6 +490,11 @@ export interface Voting extends BaseContract {
     >;
 
     registeredCommitments(
+      arg0: BigNumberish,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    registeredCommitmentsMapping(
       arg0: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<boolean>;
@@ -521,7 +560,7 @@ export interface Voting extends BaseContract {
       _nullifierHash: BigNumberish,
       _pollId: BigNumberish,
       _proof: BigNumberish[],
-      _input: [BigNumberish, BigNumberish],
+      _input: [BigNumberish, BigNumberish, BigNumberish, BigNumberish],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
@@ -548,6 +587,8 @@ export interface Voting extends BaseContract {
 
     getPolls(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getRegisteredCommitments(overrides?: CallOverrides): Promise<BigNumber>;
+
     nullifierHashes(
       arg0: BigNumberish,
       overrides?: CallOverrides,
@@ -560,6 +601,11 @@ export interface Voting extends BaseContract {
     polls(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     registeredCommitments(
+      arg0: BigNumberish,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    registeredCommitmentsMapping(
       arg0: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
@@ -581,7 +627,7 @@ export interface Voting extends BaseContract {
       _nullifierHash: BigNumberish,
       _pollId: BigNumberish,
       _proof: BigNumberish[],
-      _input: [BigNumberish, BigNumberish],
+      _input: [BigNumberish, BigNumberish, BigNumberish, BigNumberish],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -608,6 +654,10 @@ export interface Voting extends BaseContract {
 
     getPolls(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getRegisteredCommitments(
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
     nullifierHashes(
       arg0: BigNumberish,
       overrides?: CallOverrides,
@@ -626,6 +676,11 @@ export interface Voting extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     registeredCommitments(
+      arg0: BigNumberish,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    registeredCommitmentsMapping(
       arg0: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;

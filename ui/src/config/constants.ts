@@ -12,7 +12,7 @@ export const contractAddresses: Record<string, Record<string, string>> = {
   },
   voting: {
     '80001': '0x708513fb4C817b0438FE874737b8AC55D3bb3186',
-    '1666900000': '0x641d9f202378e8da32d04210f709F3e6D8CC2c63',
+    '1666900000': '0xC0fD6B7D04858b6C1B90Bac369b18c4B5424A0d0',
   },
   // add more contract addresses here...
 };
@@ -27,3 +27,5 @@ export const Links = {
 
 export const repoLink = 'https://github.com/heypran/zk-block';
 export const hackernoonGuide = 'https://bit.ly/zkblock-ageverification';
+
+export const DEFAULT_CHAIN_ID = 1666900000;

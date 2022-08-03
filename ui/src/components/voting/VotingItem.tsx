@@ -6,8 +6,6 @@ import {
   Stack,
   useColorModeValue,
   Tag,
-  Link,
-  Icon,
   Flex,
   Button,
   TagLabel,
@@ -15,8 +13,9 @@ import {
   TagRightIcon,
   RadioGroup,
   Radio,
+  useToast,
 } from '@chakra-ui/react';
-import { CheckIcon, CloseIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 
 import { Voting } from '@types/contracts/Voting';
 import { truncateAddress } from '@utils/wallet';
@@ -25,20 +24,26 @@ import { useWalletContext } from '@components/dapp/WalletContext';
 import { getVotingContract } from '@hooks/contractHelpers';
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
-//@ts-ignore
-import * as circomlibjs from 'circomlibjs';
 import { generateZkProof } from '@utils/zk/merkleproof';
 import { generateBroadcastParams } from '@utils/zk/zk-witness';
+import { DEFAULT_CHAIN_ID } from '@config/constants';
+import { getIdFromStore, posiedonHash, tryTx } from './helpers';
+const { ZkIdentity } = require('@libsem/identity');
 
-export type VoitingItemPropsType = Voting.PollStructOutput & {};
+export type VoitingItemPropsType = Voting.PollStructOutput & {
+  isRegistered?: boolean;
+};
 export function VotingItem(props: VoitingItemPropsType) {
-  console.log('props...', props);
-  const { account, provider, chainId } = useWalletContext();
+  const { isRegistered = false } = props;
+  const { account, provider, chainId = DEFAULT_CHAIN_ID } = useWalletContext();
   const [userVote, setUserVote] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
   const votingContract = React.useMemo(
-    () => getVotingContract(chainId ?? 80001),
+    () => getVotingContract(chainId ?? DEFAULT_CHAIN_ID),
     [chainId],
   );
+
   const handleStartPoll = async () => {
     if (provider == null) {
       return;
@@ -56,60 +61,108 @@ export function VotingItem(props: VoitingItemPropsType) {
   };
 
   const handleCastVote = async () => {
-    if (provider == null) {
+    if (provider == null || votingContract == null || account == null) {
       return;
     }
+    setLoading(true);
     try {
-      const poseidon = await circomlibjs.buildPoseidon();
-      const hash = poseidon([
-        '331812889988070315474899797239669195427483245251314189948350053350001993675',
-        '39184590712359246591969895646062619400571013490210628362121405247373753684',
+      const identity: typeof ZkIdentity | undefined = getIdFromStore(account);
+
+      if (identity == null) {
+        return;
+      }
+      const { identityNullifier, identityTrapdoor } = identity.getIdentity();
+
+      const hash = await posiedonHash([
+        BigInt(identityTrapdoor),
+        BigInt(identityNullifier),
       ]);
-      console.log('commitment....', hash);
-      console.log('test======>.', poseidon.F.toString(hash));
-      // const leaves = await votingContract.getRegisteredCommitments();
-      // const { pathElements: siblings, indices: pathIndices } = generateZkProof(
-      //   leaves.map((l) => ethers.BigNumber.from(l).toBigInt()),
-      //   hash,
-      // );
-      // const nullifierHash = poseidon([
-      //   '39184590712359246591969895646062619400571013490210628362121405247373753684',
-      //   ethers.BigNumber.from(userVote).toBigInt(),
-      // ]);
-      // const circuitInputs = {
-      //   idN: ,
-      //   idT: ,
-      //   treePathIndices: pathIndices,
-      //   treeSiblings: siblings,
-      //   signalHash:  ethers.BigNumber.from(userVote).toBigInt(),
-      //   externalNullifier:ethers.BigNumber.from(props.pollId).toBigInt()
-      // };
 
-      // const fullProof = await generateBroadcastParams(circuitInputs, 'voting');
+      const leaves = await votingContract.getRegisteredCommitments();
 
-      // const [a, b, c, input] = fullProof;
+      const { pathElements, indices } = await generateZkProof(leaves, hash);
 
-      // const tx = await votingContract
-      //   ?.connect(provider.getSigner())
-      //   .castVote(
-      //     props.pollId,
-      //     nullifierHash,
-      //     props.pollId,
-      //     [...a, ...b[0], ...b[1], ...c],
-      //     input,
-      //   );
-      // if (tx?.hash) {
-      //   console.log('tx sent');
-      // }
+      const nullifierHash = await posiedonHash([
+        BigInt(identityNullifier),
+        ethers.BigNumber.from(userVote).toBigInt(),
+      ]);
+
+      const circuitInputs = {
+        identityNullifier: BigInt(identityNullifier),
+        identityTrapdoor: BigInt(identityTrapdoor),
+        treePathIndices: indices,
+        treeSiblings: pathElements,
+        signalHash: ethers.BigNumber.from(userVote).toBigInt(),
+        externalNullifier: ethers.BigNumber.from(props.pollId).toBigInt(),
+      };
+
+      const fullProof = await generateBroadcastParams(circuitInputs, 'voting');
+
+      const [a, b, c, input] = fullProof;
+      const tx = await votingContract
+        ?.connect(provider.getSigner())
+        .castVote(
+          userVote,
+          nullifierHash,
+          props.pollId,
+          [...a, ...b[0], ...b[1], ...c],
+          input,
+        );
+      if (tx?.hash) {
+        toast({
+          title: 'Tx Sent!',
+          description: `Tx Hash: ${tx.hash}`,
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
+      }
     } catch (e) {
       console.log('Error sending tx', e);
+      toast({
+        title: 'Error!',
+        description: `Error sending creating transaction.`,
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
     }
+    setLoading(false);
   };
+  const noVotes = React.useMemo(
+    () =>
+      props.votes.filter((v) => ethers.BigNumber.from(v).toNumber() === 0)
+        .length,
+    [props.votes],
+  );
+
+  const yesVotes = props.votes.length - noVotes;
+  const handleEndPoll = async () => {
+    tryTx(async () => {
+      if (provider == null || votingContract == null) {
+        return;
+      }
+
+      const tx = await votingContract
+        .connect(provider.getSigner())
+        .endPoll(props.pollId);
+      if (tx?.hash) {
+        toast({
+          title: 'Tx Sent!',
+          description: `Tx Hash: ${tx.hash}`,
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
+      }
+    });
+  };
+
   return (
-    <Center py={6}>
+    <Center py={6} ml={8}>
       <Box
         w={'320px'}
-        h={'350px'}
+        h={'380px'}
         bg={useColorModeValue('white', 'gray.900')}
         boxShadow={'2xl'}
         rounded={'md'}
@@ -140,6 +193,12 @@ export function VotingItem(props: VoitingItemPropsType) {
                 Voting Ended
               </Tag>
             )}
+            {props.pollStatus == PollStatus.Started &&
+              ethers.BigNumber.from(props.quorum).toNumber() <= yesVotes && (
+                <Tag size="sm" key="1" variant="solid" colorScheme="orange">
+                  Proposal Passed
+                </Tag>
+              )}
           </Stack>
         </Stack>
 
@@ -161,9 +220,7 @@ export function VotingItem(props: VoitingItemPropsType) {
               variant="solid"
               colorScheme="green"
             >
-              <TagLabel>
-                {props.votes.filter((v) => v.toNumber() === 1).length} Yes
-              </TagLabel>
+              <TagLabel>{yesVotes} Yes</TagLabel>
               <TagRightIcon as={CheckIcon} fontSize="12px" />
             </Tag>
 
@@ -174,10 +231,7 @@ export function VotingItem(props: VoitingItemPropsType) {
               variant="solid"
               colorScheme="red"
             >
-              <TagLabel>
-                {}
-                {props.votes.filter((v) => v.toNumber() === 0).length} No
-              </TagLabel>
+              <TagLabel>{noVotes} No</TagLabel>
               <TagRightIcon as={CloseIcon} fontSize="10px" />
             </Tag>
           </HStack>
@@ -196,76 +250,81 @@ export function VotingItem(props: VoitingItemPropsType) {
               </Button>
             )}
           {props.pollStatus === PollStatus.Started && (
-            <Flex
-              alignContent="center"
-              alignItems="center"
-              justify="space-between"
-              border="1px solid red"
-            >
-              <Text
-                color={'black'}
-                textAlign="justify"
-                mt={8}
-                fontSize="lg"
-                as="b"
-              >
-                Vote:
-              </Text>
-              <Flex>
-                <RadioGroup
-                  defaultValue={userVote.toString()}
-                  onChange={(e) => {
-                    setUserVote(Number(e));
-                  }}
+            <Flex alignItems="center" justify="space-between">
+              {isRegistered ? (
+                <>
+                  <Flex alignItems="center">
+                    <Text
+                      color={'black'}
+                      textAlign="justify"
+                      fontSize="lg"
+                      as="b"
+                      mr={8}
+                    >
+                      Vote:
+                    </Text>
+                    <RadioGroup
+                      defaultValue={userVote.toString()}
+                      onChange={(e) => {
+                        setUserVote(Number(e));
+                      }}
+                    >
+                      <Stack>
+                        <Radio value="0">No </Radio>
+                        <Radio value="1">Yes</Radio>
+                      </Stack>
+                    </RadioGroup>
+                  </Flex>
+                  <Flex justify="space-between" direction="column">
+                    <Button
+                      variant="solid"
+                      bg="black"
+                      _hover={{ bg: 'gray.600' }}
+                      color="white"
+                      size="sm"
+                      isLoading={loading}
+                      onClick={handleCastVote}
+                    >
+                      Cast Vote
+                    </Button>
+                    {props.creator == account && (
+                      <Button
+                        variant="solid"
+                        bg="black"
+                        _hover={{ bg: 'gray.600' }}
+                        mt={2}
+                        color="white"
+                        size="sm"
+                        onClick={handleEndPoll}
+                      >
+                        End Poll
+                      </Button>
+                    )}
+                  </Flex>
+                </>
+              ) : (
+                <Text
+                  color={'black'}
+                  textAlign="justify"
+                  mt={8}
+                  fontSize="lg"
+                  as="b"
                 >
-                  <Stack>
-                    <Radio value="0">No </Radio>
-                    <Radio value="1">Yes</Radio>
-                  </Stack>
-                </RadioGroup>
-                <Button
-                  variant="solid"
-                  bg="black"
-                  _hover={{ bg: 'gray.600' }}
-                  ml="24px"
-                  color="white"
-                >
-                  Cast Vote
-                </Button>
-              </Flex>
+                  You need to register in order to vote!
+                </Text>
+              )}
             </Flex>
           )}
-
-          {/* <Link isExternal aria-label="Go to GitHub page" href="">
-              <Icon
-                as={GithubIcon}
-                display="block"
-                transition="color 0.2s"
-                w="5"
-                h="5"
-                _hover={{ color: 'gray.600' }}
-              />
-            </Link> */}
           <Text color={'black'} textAlign="justify" mt={8}>
             Quorum: {props.quorum.toNumber()}
           </Text>
           <Text color={'black'} textAlign="justify" mt={8}>
-            Created by:{' '}
+            Created by:
             {props.creator === account ? 'You' : truncateAddress(props.creator)}
           </Text>
           <Text color={'black'} textAlign="justify" mt={8}>
             Created at: 12/21/2022
           </Text>
-          {/* <Link isExternal aria-label="Go to Website page" href="">
-            <Icon
-              as={ExternalLinkIcon}
-              display="block"
-              transition="color 0.2s"
-              w="5"
-              h="5"
-              _hover={{ color: 'gray.600' }}
-            />
-          </Link> */}
         </Stack>
       </Box>
     </Center>

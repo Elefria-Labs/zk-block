@@ -1,33 +1,15 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React from 'react';
 
-import {
-  Text,
-  Box,
-  Heading,
-  Button,
-  Collapse,
-  Input,
-  Flex,
-} from '@chakra-ui/react';
-
-import { getAgeCheckContract, getVotingContract } from '@hooks/contractHelpers';
-import { useWalletContext } from '@components/dapp/WalletContext';
+import { Box, Flex } from '@chakra-ui/react';
 import { VotingItem } from './VotingItem';
 import { Voting } from '@types/contracts/Voting';
 
 export type MyPollsPropsType = {
   polls: Voting.PollStructOutput[];
+  isRegistered?: boolean;
 };
 const MyPolls = (props: MyPollsPropsType) => {
-  const [activePolls, setActivePolls] = React.useState<
-    Voting.PollStructOutput[]
-  >([]);
-  const { chainId, provider, account } = useWalletContext();
-
-  const votingContract = React.useMemo(
-    () => getVotingContract(chainId ?? 80001),
-    [chainId],
-  );
+  const { isRegistered } = props;
 
   return (
     <div>
@@ -39,13 +21,9 @@ const MyPolls = (props: MyPollsPropsType) => {
           marginBottom: '16px',
         }}
       >
-        <Flex
-          border="1px solid red"
-          flexWrap="wrap"
-          justifyContent="space-between"
-        >
+        <Flex flexWrap="wrap" justifyContent="space-between">
           {props.polls.map((p, i) => (
-            <VotingItem key={i} {...p} />
+            <VotingItem key={i} {...p} isRegistered={isRegistered} />
           ))}
         </Flex>
       </Box>

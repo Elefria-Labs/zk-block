@@ -8,7 +8,7 @@ interface IVerifier {
     uint256[2] memory a,
     uint256[2][2] memory b,
     uint256[2] memory c,
-    uint256[2] memory input
+    uint256[4] memory input
   ) external view returns (bool);
 }
 
@@ -111,22 +111,22 @@ contract Voting {
         uint256 _vote,
         uint256 _nullifierHash,
         uint256 _pollId,
-        uint256[8] calldata _proof,uint256[2] calldata _input
+        uint256[8] calldata _proof,uint256[4] calldata _input
     ) public {
         Poll storage poll = polls[_pollId];
 
         require(poll.pollStatus == PollStatus.Started, "Poll not started");
         require(nullifierHashes[_nullifierHash] == false, "Invalid nullifier");
 
-         zkVerfier.verifyProof(
+        require(zkVerfier.verifyProof(
         [_proof[0], _proof[1]],
         [[_proof[2], _proof[3]], [_proof[4], _proof[5]]],
         [_proof[6], _proof[7]],
         _input
-      );
+      ),"Invalid proof");
         // Prevent double-voting (nullifierHash = hash(pollId + identityNullifier)).
         nullifierHashes[_nullifierHash]=true;
-        polls[_pollId].votes.push(_vote);
+        poll.votes.push(_vote);
         
         emit Voted(_pollId, _vote);
     }
@@ -162,7 +162,7 @@ contract Voting {
         return polls[_pollId];
     }
 
-  function getRegisteredCommitments(uint _pollId) public view returns (uint[] memory){
+  function getRegisteredCommitments() public view returns (uint[] memory){
         return registeredCommitments;
     }
 }

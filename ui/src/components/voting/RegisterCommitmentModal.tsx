@@ -7,72 +7,82 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  useDisclosure,
   Input,
   Stack,
   FormControl,
   FormLabel,
-  FormHelperText,
-  FormErrorMessage,
+  useToast,
 } from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
+
 import { useEffect, useState } from 'react';
 import { BaseButton } from '@components/common/BaseButton';
 import { getVotingContract } from '@hooks/contractHelpers';
 import { useWalletContext } from '@components/dapp/WalletContext';
-//@ts-ignore
-import * as circomlibjs from 'circomlibjs';
+import { hasZkId, storeZkId } from './storage';
+import { posiedonHash } from './helpers';
+import { DEFAULT_CHAIN_ID } from '@config/constants';
 
 const { ZkIdentity } = require('@libsem/identity');
+type RegisterCommitmentModalPropsType = {
+  onClose: any;
+  isOpen: any;
+  isRegistered?: boolean;
+};
 
-export function RegisterCommitmentModal({ onClose, isOpen }: any) {
-  //const { isOpen, onOpen, onClose } = useDisclosure();
+export function RegisterCommitmentModal(
+  props: RegisterCommitmentModalPropsType,
+) {
+  const { isOpen, onClose } = props;
   const [idt, setIdt] = useState('');
   const [idn, setIdn] = useState('');
-
-  const { chainId = 80001, provider } = useWalletContext();
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const { chainId = DEFAULT_CHAIN_ID, provider, account } = useWalletContext();
   const votingContract = getVotingContract(chainId);
-  // const handleInputChange = (e) => setInput(e.target.value);
-
-  const isError = '' === '';
 
   const onRegister = async () => {
     if (provider == null) {
       return;
     }
-    const poseidon = await circomlibjs.buildPoseidon();
-    const hash = poseidon([
-      '331812889988070315474899797239669195427483245251314189948350053350001993675',
-      '39184590712359246591969895646062619400571013490210628362121405247373753684',
-    ]);
-    console.log('commitment....', hash);
-    console.log('test======>.', poseidon.F.toString(hash));
+    setLoading(true);
+    const hash = await posiedonHash([BigInt(idt), BigInt(idn)]);
+
     try {
       const tx = await votingContract
         ?.connect(provider.getSigner())
-        .regsiterCommitment(poseidon.F.toString(hash));
+        .regsiterCommitment(hash);
       if (tx?.hash) {
-        console.log('tx sent');
+        toast({
+          title: 'Tx Sent!',
+          description: `Tx Hash: ${tx.hash}`,
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
       }
     } catch (e) {
-      console.log('Error sending tx', e);
+      toast({
+        title: 'Error!',
+        description: `Error sending creating transaction.`,
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
     }
+    setLoading(false);
   };
 
   useEffect(() => {
+    if (account == null || hasZkId(account)) {
+      return;
+    }
     const identity: typeof ZkIdentity = new ZkIdentity();
     const { identityNullifier, identityTrapdoor } = identity.getIdentity();
-    console.log(`identity`, identity.getIdentity());
+    setIdt(() => identityTrapdoor);
+    setIdn(() => identityNullifier);
+    storeZkId(identity.serializeIdentity(), account.substring(0, 5));
+  }, [account, setIdt, setIdn, storeZkId]);
 
-    setIdn(identityNullifier);
-    setIdt(identityTrapdoor);
-
-    // console.log(`zkId`, zkId);
-    // storeNewId(identity.serializeIdentity());
-  }, [setIdn, setIdt]);
-
-  // 331812889988070315474899797239669195427483245251314189948350053350001993675n
-  // 39184590712359246591969895646062619400571013490210628362121405247373753684n
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -101,7 +111,12 @@ export function RegisterCommitmentModal({ onClose, isOpen }: any) {
         </ModalBody>
 
         <ModalFooter>
-          <BaseButton mr={3} onClick={onRegister} title="Register" />
+          <BaseButton
+            mr={3}
+            onClick={onRegister}
+            title="Register"
+            isLoading={loading}
+          />
 
           <Button variant="ghost" onClick={onClose}>
             Close
