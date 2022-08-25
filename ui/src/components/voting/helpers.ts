@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as circomlibjs from 'circomlibjs';
 import { hasZkId, retrieveZkId } from './storage';
 const { ZkIdentity } = require('@libsem/identity');
@@ -8,12 +9,12 @@ export const posiedonHash = async (values: any[]): Promise<string> => {
   return poseidon.F.toString(hash);
 };
 
-export const getIdFromStore = (account: string) => {
-  if (!hasZkId(account)) {
+export const getIdFromStore = (account: string, chainId: number) => {
+  if (chainId == null || !hasZkId(account, chainId)) {
     return;
   }
 
-  const serializedIdentity = retrieveZkId(account.substring(0, 5));
+  const serializedIdentity = retrieveZkId(account, chainId);
   const identity: typeof ZkIdentity =
     ZkIdentity.genFromSerialized(serializedIdentity);
   return identity;
@@ -21,25 +22,31 @@ export const getIdFromStore = (account: string) => {
 
 export const getCommitment = async (
   account: string,
+  chainId: number,
 ): Promise<string | undefined> => {
-  const identity: typeof ZkIdentity | undefined = getIdFromStore(account);
+  const identity: typeof ZkIdentity | undefined = getIdFromStore(
+    account,
+    chainId,
+  );
 
   if (identity == null) {
     return;
   }
+
   const { identityNullifier, identityTrapdoor } = identity.getIdentity();
-  console.log('idt', identityTrapdoor, ' idn', identityNullifier);
-  return await posiedonHash([
+  const hash = await posiedonHash([
     BigInt(identityTrapdoor),
     BigInt(identityNullifier),
   ]);
+  return hash;
 };
 
 export const tryTx = async (fn: any) => {
   if (typeof fn == 'function') {
     {
       try {
-        return await fn();
+        const result = await fn();
+        return result;
       } catch (e) {
         console.log('Err sending tx: ', e);
       }

@@ -21,8 +21,10 @@ import { useWalletContext } from '@components/dapp/WalletContext';
 import { hasZkId, storeZkId } from './storage';
 import { posiedonHash } from './helpers';
 import { DEFAULT_CHAIN_ID } from '@config/constants';
-
+import { actionType } from '@hooks/useIsRegisteredId';
+import { useVotingContext } from './VotingContext';
 const { ZkIdentity } = require('@libsem/identity');
+
 type RegisterCommitmentModalPropsType = {
   onClose: any;
   isOpen: any;
@@ -32,6 +34,8 @@ type RegisterCommitmentModalPropsType = {
 export function RegisterCommitmentModal(
   props: RegisterCommitmentModalPropsType,
 ) {
+  const { dispatch } = useVotingContext();
+
   const { isOpen, onClose } = props;
   const [idt, setIdt] = useState('');
   const [idn, setIdn] = useState('');
@@ -41,7 +45,7 @@ export function RegisterCommitmentModal(
   const votingContract = getVotingContract(chainId);
 
   const onRegister = async () => {
-    if (provider == null) {
+    if (provider == null || account == null) {
       return;
     }
     setLoading(true);
@@ -59,6 +63,8 @@ export function RegisterCommitmentModal(
           position: 'top-right',
           isClosable: true,
         });
+        dispatch({ type: actionType.confirmingTx, confirmingTx: true });
+        onClose();
       }
     } catch (e) {
       toast({
@@ -73,14 +79,14 @@ export function RegisterCommitmentModal(
   };
 
   useEffect(() => {
-    if (account == null || hasZkId(account)) {
+    if (account == null || chainId == null || hasZkId(account, chainId)) {
       return;
     }
     const identity: typeof ZkIdentity = new ZkIdentity();
     const { identityNullifier, identityTrapdoor } = identity.getIdentity();
     setIdt(() => identityTrapdoor);
     setIdn(() => identityNullifier);
-    storeZkId(identity.serializeIdentity(), account.substring(0, 5));
+    storeZkId(identity.serializeIdentity(), account, chainId);
   }, [account, setIdt, setIdn, storeZkId]);
 
   return (

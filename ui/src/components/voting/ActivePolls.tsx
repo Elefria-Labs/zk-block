@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, Flex } from '@chakra-ui/react';
 import { VotingItem } from './VotingItem';
-import { Voting } from '@types/contracts/Voting';
+import { Voting } from '../../types/contracts/Voting';
 
 export type ActiviePollsPropsType = {
   polls: Voting.PollStructOutput[];

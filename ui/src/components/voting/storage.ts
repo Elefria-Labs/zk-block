@@ -12,14 +12,17 @@ const initStorage = () => {
   }
 };
 
-const storeZkId = (zkId: string, accountKey: string) => {
-  const key = `${keyNew}_${accountKey}`;
+const storeZkId = (zkId: string, accountKey: string, chainId: number) => {
+  const key = `${keyNew}_${chainId}_${accountKey.substring(0, 5)}`;
   localStorage?.setItem(key, zkId);
 };
 
-const retrieveZkId = (accountKey: string): string | undefined => {
+const retrieveZkId = (
+  accountKey: string,
+  chainId: number,
+): string | undefined => {
   let serialisedIdentity;
-  const key = `${keyNew}_${accountKey}`;
+  const key = `${keyNew}_${chainId}_${accountKey.substring(0, 5)}`;
   try {
     serialisedIdentity = localStorage?.getItem(key) ?? '';
     return serialisedIdentity;
@@ -29,8 +32,8 @@ const retrieveZkId = (accountKey: string): string | undefined => {
   return undefined;
 };
 
-const hasZkId = (accountKey: string): boolean => {
-  const key = `${keyNew}_${accountKey.substring(0, 5)}`;
+const hasZkId = (accountKey: string, chainId: number): boolean => {
+  const key = `${keyNew}_${chainId}_${accountKey.substring(0, 5)}`;
   const d = localStorage?.getItem(key);
   return d != null && d.length > 0;
 };

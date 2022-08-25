@@ -6,8 +6,8 @@ const generateWitnessJs = require('./witness_calculator.js');
 const { unstringifyBigInts } = ff.utils;
 
 const circuitDir = 'snarks';
-//const zkey = 'snarks/circuit_final.zkey';
-const plonkZkey = 'snarks/circuit_final_plonk.zkey';
+// const zkey = 'snarks/circuit_final.zkey';
+// onst plonkZkey = 'snarks/circuit_final_plonk.zkey';
 
 const getBinaryPromise = (wasmFile: any) =>
   new Promise((resolve, reject) => {

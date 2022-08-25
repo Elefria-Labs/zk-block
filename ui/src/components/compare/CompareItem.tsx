@@ -192,6 +192,7 @@ const CompareItem = (props: CompareItemPropsType) => {
             age,
           },
         },
+        'circuit',
         true,
       );
 

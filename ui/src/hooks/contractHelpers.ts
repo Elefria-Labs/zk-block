@@ -1,5 +1,5 @@
 import { networkConfig } from '@config/network';
-import { Voting } from '@types/contracts/Voting';
+import { Voting } from '../types/contracts/Voting';
 import { toHex } from '@utils/wallet';
 import { ethers } from 'ethers';
 

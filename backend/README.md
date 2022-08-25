@@ -41,13 +41,14 @@ Run below command to deploy
 
 `yarn deploy:agecheck --network testnet`
 
-#### Testnet Addresses
+#### Voting Testnet Addresses
 
-- Poseidon3 - 0x87BbbFD587A5A1200B712715A37aA5c98D24d68b
-- IncrementalBinTree - 0x2237458fCC956F787d5dedCfd7AD77d28Ad3e455
-- Verifier Address - 0x04D88583d8cc4e8e6597CD2850e096572B27F07d
-- Voting Contract - 0xDaC7C69F0C3ef580344801142dc9d87021CEBB98
-- 0x708513fb4C817b0438FE874737b8AC55D3bb3186
+##### Mumbai
+
+- Poseidon3 - 0x1DFBC400911fc51EFC38D9f52137B4118B101237
+- IncrementalBinTree - 0x1CA4a4dA8D4290FE47573A9AB00112FCc7eeDF18
+- Verifier Address - 0xe42aBe0c80D7f355E7D8eac0D27e305Dd4F4D75C
+- Voting Contract - 0x7F4fB1448D3d8a72e312Bab54368Ad1D4FF10a52
 
 ##### Harmony Devnet
 

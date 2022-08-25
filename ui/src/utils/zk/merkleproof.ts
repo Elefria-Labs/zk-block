@@ -33,7 +33,7 @@ export const generateMerkleProof = async (
   leavesPerNode: number,
   leaves: Array<bigint | string>,
   leaf: bigint | string,
-): any => {
+): Promise<any> => {
   const poseidon = await circomlibjs.buildPoseidon();
   const tree = new Tree.IncrementalQuinTree(
     depth,

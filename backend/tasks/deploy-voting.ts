@@ -1,7 +1,7 @@
 import { Contract } from "ethers"
-
 import { task, types } from "hardhat/config"
 import { poseidon_gencontract } from "circomlibjs"
+
 task("deploy:voting", "Deploy the voting contract & its verifier contract")
   .addOptionalParam<boolean>("logs", "Logs ", true, types.boolean)
   .setAction(async ({ logs }, { ethers }): Promise<Contract> => {

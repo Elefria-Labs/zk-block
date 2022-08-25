@@ -4,12 +4,12 @@ import { Box, Flex } from '@chakra-ui/react';
 import { VotingItem } from './VotingItem';
 import { Voting } from '../../types/contracts/Voting';
 
-export type MyPollsPropsType = {
+export type PreviousPollsPropsType = {
   polls: Voting.PollStructOutput[];
   isRegistered?: boolean;
 };
-const MyPolls = (props: MyPollsPropsType) => {
-  const { isRegistered } = props;
+const PreviousPolls = (props: PreviousPollsPropsType) => {
+  const { isRegistered = false } = props;
 
   return (
     <div>
@@ -31,4 +31,4 @@ const MyPolls = (props: MyPollsPropsType) => {
   );
 };
 
-export default MyPolls;
+export default PreviousPolls;

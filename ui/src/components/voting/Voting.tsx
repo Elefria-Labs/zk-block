@@ -13,6 +13,16 @@ import {
   Tabs,
   TabList,
   Tab,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  Text,
+  IconButton,
+  Spinner,
 } from '@chakra-ui/react';
 
 import { getVotingContract } from '@hooks/contractHelpers';
@@ -21,13 +31,17 @@ import { CreatePollModal } from './CreatePollModal';
 import { RegisterCommitmentModal } from './RegisterCommitmentModal';
 import ActivePolls from './ActivePolls';
 import MyPolls from './MyPolls';
-import { Voting } from '@types/contracts/Voting';
+import { Voting } from '../../types/contracts/Voting';
 import { PollStatus } from './types';
-import { getCommitment } from './helpers';
+import { InfoIcon } from '@chakra-ui/icons';
+import { useVotingContext } from './VotingContext';
+import { ethers } from 'ethers';
+import PreviousPolls from './PreviousPolls';
 
 const VotingDapp = () => {
-  const [isRegistered, setIsRegistered] = React.useState<boolean>(false);
+  const { isRegistered, zkIdState } = useVotingContext();
   const { chainId, account } = useWalletContext();
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [activePolls, setActivePolls] = React.useState<
     Voting.PollStructOutput[]
   >([]);
@@ -42,28 +56,14 @@ const VotingDapp = () => {
     onClose: onCloseRegister,
   } = useDisclosure();
 
-  const getRegisterationStatus = async () => {
-    if (account == null || votingContract == null) {
-      return;
-    }
-    const commitment = await getCommitment(account);
-    if (commitment == null) {
-      return;
-    }
-
-    const isRegistered = await votingContract?.registeredCommitmentsMapping(
-      commitment,
-    );
-    setIsRegistered(isRegistered);
-  };
-
   const getAllPolls = async () => {
     if (votingContract == null) {
       return;
     }
-
+    setLoading(true);
     const activePolls = await votingContract.getAllPolls();
     setActivePolls(activePolls);
+    setLoading(false);
   };
   useEffect(() => {
     if (votingContract == null || chainId == null || account == null) {
@@ -71,9 +71,8 @@ const VotingDapp = () => {
     }
 
     getAllPolls();
-    getRegisterationStatus();
   }, [chainId, account, votingContract]);
-
+  console.log('zkIdState.confirmingTx', zkIdState);
   return (
     <div>
       <Container maxW="container.lg" pb="16px">
@@ -83,8 +82,48 @@ const VotingDapp = () => {
             fontSize={['22px', '22px', '28px']}
             mb={['8px', '8px', '16px']}
           >
-            Voting
+            zkVoting
           </Heading>
+          <Popover>
+            <PopoverTrigger>
+              <IconButton
+                aria-label="Zk Voting Info"
+                background={'white'}
+                color="black"
+                size="lg"
+                icon={<InfoIcon fontSize="24" />}
+              />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton color="black" />
+              <PopoverHeader color="black">How it works!</PopoverHeader>
+              <PopoverBody color="black">
+                1. Register your ZkID. <br /> 2. Create a poll. <br /> 3. Invite
+                others to vote!
+                <br />
+                <Divider my={4} />
+                <Text as="b">Important</Text>
+                <br />
+                1. ZkID is stored in localstorage <br /> 2. Download it to be
+                able to create poll or vote from any other address.
+                <br />
+                3. Your id commitment is registered on chain and proof is
+                generated in browser.
+                <br />
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+          {zkIdState.confirmingTx && (
+            <Text color="black">
+              Confirming Tx.. <Spinner />
+            </Text>
+          )}
+          {loading && (
+            <Text color="black">
+              Loading polls.. <Spinner />
+            </Text>
+          )}
         </Box>
         <Divider />
 
@@ -117,20 +156,43 @@ const VotingDapp = () => {
           <TabList>
             <Tab>Active Polls</Tab>
             <Tab>My Polls</Tab>
+            <Tab>Previous Polls</Tab>
           </TabList>
 
           <TabPanels>
             <TabPanel>
               <ActivePolls
-                polls={activePolls.filter(
-                  (p) => p.pollStatus !== PollStatus.Created,
-                )}
+                polls={activePolls
+                  .filter((p) => p.pollStatus == PollStatus.Started)
+                  .sort(
+                    (a, b) =>
+                      ethers.BigNumber.from(b.createdAt).toNumber() -
+                      ethers.BigNumber.from(a.createdAt).toNumber(),
+                  )}
                 isRegistered={isRegistered}
               />
             </TabPanel>
             <TabPanel>
               <MyPolls
-                polls={activePolls.filter((p) => p.creator == account)}
+                polls={activePolls
+                  .filter((p) => p.creator == account)
+                  .sort(
+                    (a, b) =>
+                      ethers.BigNumber.from(b.createdAt).toNumber() -
+                      ethers.BigNumber.from(a.createdAt).toNumber(),
+                  )}
+                isRegistered={isRegistered}
+              />
+            </TabPanel>
+            <TabPanel>
+              <PreviousPolls
+                polls={activePolls
+                  .filter((p) => p.pollStatus == PollStatus.Ended)
+                  .sort(
+                    (a, b) =>
+                      ethers.BigNumber.from(b.createdAt).toNumber() -
+                      ethers.BigNumber.from(a.createdAt).toNumber(),
+                  )}
                 isRegistered={isRegistered}
               />
             </TabPanel>

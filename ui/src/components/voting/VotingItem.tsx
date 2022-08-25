@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 
-import { Voting } from '@types/contracts/Voting';
+import { Voting } from '../../types/contracts/Voting';
 import { truncateAddress } from '@utils/wallet';
 import { PollStatus } from './types';
 import { useWalletContext } from '@components/dapp/WalletContext';
@@ -28,6 +28,7 @@ import { generateZkProof } from '@utils/zk/merkleproof';
 import { generateBroadcastParams } from '@utils/zk/zk-witness';
 import { DEFAULT_CHAIN_ID } from '@config/constants';
 import { getIdFromStore, posiedonHash, tryTx } from './helpers';
+import { actionType, useIsRegistered } from '@hooks/useIsRegisteredId';
 const { ZkIdentity } = require('@libsem/identity');
 
 export type VoitingItemPropsType = Voting.PollStructOutput & {
@@ -36,6 +37,7 @@ export type VoitingItemPropsType = Voting.PollStructOutput & {
 export function VotingItem(props: VoitingItemPropsType) {
   const { isRegistered = false } = props;
   const { account, provider, chainId = DEFAULT_CHAIN_ID } = useWalletContext();
+  const { dispatch } = useIsRegistered();
   const [userVote, setUserVote] = useState(1);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -61,12 +63,20 @@ export function VotingItem(props: VoitingItemPropsType) {
   };
 
   const handleCastVote = async () => {
-    if (provider == null || votingContract == null || account == null) {
+    if (
+      provider == null ||
+      votingContract == null ||
+      account == null ||
+      chainId == null
+    ) {
       return;
     }
     setLoading(true);
     try {
-      const identity: typeof ZkIdentity | undefined = getIdFromStore(account);
+      const identity: typeof ZkIdentity | undefined = getIdFromStore(
+        account,
+        chainId,
+      );
 
       if (identity == null) {
         return;
@@ -154,6 +164,7 @@ export function VotingItem(props: VoitingItemPropsType) {
           position: 'top-right',
           isClosable: true,
         });
+        dispatch({ type: actionType.confirmingTx, confirmingTx: true });
       }
     });
   };
@@ -161,7 +172,7 @@ export function VotingItem(props: VoitingItemPropsType) {
   return (
     <Center py={6} ml={8}>
       <Box
-        w={'320px'}
+        w={'380px'}
         h={'380px'}
         bg={useColorModeValue('white', 'gray.900')}
         boxShadow={'2xl'}
@@ -193,10 +204,16 @@ export function VotingItem(props: VoitingItemPropsType) {
                 Voting Ended
               </Tag>
             )}
-            {props.pollStatus == PollStatus.Started &&
+            {props.pollStatus == PollStatus.Ended &&
               ethers.BigNumber.from(props.quorum).toNumber() <= yesVotes && (
                 <Tag size="sm" key="1" variant="solid" colorScheme="orange">
                   Proposal Passed
+                </Tag>
+              )}
+            {props.pollStatus == PollStatus.Ended &&
+              ethers.BigNumber.from(props.quorum).toNumber() <= yesVotes && (
+                <Tag size="sm" key="1" variant="solid" colorScheme="orange">
+                  Quorum Not Reached
                 </Tag>
               )}
           </Stack>
@@ -304,26 +321,29 @@ export function VotingItem(props: VoitingItemPropsType) {
                 </>
               ) : (
                 <Text
-                  color={'black'}
+                  color={''}
                   textAlign="justify"
-                  mt={8}
+                  my={4}
                   fontSize="lg"
                   as="b"
                 >
-                  You need to register in order to vote!
+                  Register to vote!
                 </Text>
               )}
             </Flex>
           )}
           <Text color={'black'} textAlign="justify" mt={8}>
-            Quorum: {props.quorum.toNumber()}
+            Quorum:&nbsp; {props.quorum.toNumber()}
           </Text>
           <Text color={'black'} textAlign="justify" mt={8}>
-            Created by:
+            Created by:&nbsp;
             {props.creator === account ? 'You' : truncateAddress(props.creator)}
           </Text>
           <Text color={'black'} textAlign="justify" mt={8}>
-            Created at: 12/21/2022
+            Created at:&nbsp;
+            {new Date(
+              ethers.BigNumber.from(props.createdAt).toNumber() * 1000,
+            ).toLocaleDateString()}
           </Text>
         </Stack>
       </Box>

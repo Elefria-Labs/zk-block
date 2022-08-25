@@ -5,6 +5,7 @@ import { Meta } from '@layout/Meta';
 import { Main } from '@templates/Main';
 import WalletConnectComponent from '@components/dapp/WalletConnection';
 import VotingDapp from '@components/voting/Voting';
+import VotingContextProvider from '@components/voting/VotingContext';
 
 const Voting = () => {
   return (
@@ -37,7 +38,9 @@ const Voting = () => {
               <Box>
                 <WalletConnectComponent />
               </Box>
-              <VotingDapp />
+              <VotingContextProvider>
+                <VotingDapp />
+              </VotingContextProvider>
             </Box>
           </Box>
         </Container>
