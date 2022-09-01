@@ -11,7 +11,7 @@ import "solidity-coverage"
 import { config } from "./package.json"
 import KEYS from "./private.json"
 import "./tasks/deploy-age-check"
-// dotenvConfig({ path: resolve(__dirname, "./.env") })
+import "./tasks/deploy-voting"
 
 function getNetworks(): NetworksUserConfig | undefined {
   const infuraApiKey = process.env.INFURA_API_KEY

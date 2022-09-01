@@ -22,6 +22,7 @@ module.exports = compose([
           worker_threads: false,
           crypto: require.resolve('crypto-browserify'),
           os: false,
+          assert: false,
         };
         // /https://github.com/ethers-io/ethers.js/issues/998
         config.resolve.alias.https = 'https-browserify';

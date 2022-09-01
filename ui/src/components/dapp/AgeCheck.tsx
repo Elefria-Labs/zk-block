@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 
 import { getAgeCheckContract } from '@hooks/contractHelpers';
-import { generateBroadcastParams } from '@utils/ zk/zk-witness';
+import { generateBroadcastParams } from '@utils/zk/zk-witness';
 import { truncateAddress } from '@utils/wallet';
 
 import { useWalletContext } from './WalletContext';
@@ -85,12 +85,15 @@ const AgeCheck = () => {
     setLoading(true);
     setStatusMsg('Generating Proof');
     try {
-      const [a, b, c, input] = await generateBroadcastParams({
-        ...{
-          ageLimit: 18,
-          age,
+      const [a, b, c, input] = await generateBroadcastParams(
+        {
+          ...{
+            ageLimit: 18,
+            age,
+          },
         },
-      });
+        'circuit',
+      );
       setError(undefined);
       setStatusMsg('Proof Generated..');
       const proof = [...a, ...b[0], ...b[1], ...c];
