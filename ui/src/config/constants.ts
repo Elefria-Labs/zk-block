@@ -25,9 +25,11 @@ export const Links = {
   boilerplate: 'https://boilerplate.zkblock.app/',
   contribute: 'https://zkblock.app/contribute',
   about: 'https://zkblock.app/about',
+  subscribe: 'https://zkblock.app/subscribe',
 };
 
 export const repoLink = 'https://github.com/heypran/zk-block';
 export const hackernoonGuide = 'https://bit.ly/zkblock-ageverification';
+export const zkVoting = 'https://youtu.be/uuw6GsDBzAk';
 
 export const DEFAULT_CHAIN_ID = 80001;

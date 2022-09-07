@@ -23,6 +23,7 @@ import {
   Text,
   IconButton,
   Spinner,
+  Icon,
 } from '@chakra-ui/react';
 
 import { getVotingContract } from '@hooks/contractHelpers';
@@ -37,6 +38,9 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { useVotingContext } from './VotingContext';
 import { ethers } from 'ethers';
 import PreviousPolls from './PreviousPolls';
+import Link from 'next/link';
+import { zkVoting } from '@config/constants';
+import { YoutubeIcon } from '@components/icon/youtube';
 
 const VotingDapp = () => {
   const { isRegistered, zkIdState } = useVotingContext();
@@ -76,14 +80,14 @@ const VotingDapp = () => {
   return (
     <div>
       <Container maxW="container.lg" pb="16px">
-        <Box py="8px" color="gray.200">
-          <Heading
-            color="black"
-            fontSize={['22px', '22px', '28px']}
-            mb={['8px', '8px', '16px']}
-          >
-            zkVoting
-          </Heading>
+        <Heading
+          color="black"
+          fontSize={['22px', '22px', '28px']}
+          mb={['8px', '8px', '16px']}
+        >
+          zkVoting
+        </Heading>
+        <Box py="8px" color="gray.200" display="flex" alignItems="center">
           <Popover>
             <PopoverTrigger>
               <IconButton
@@ -114,6 +118,18 @@ const VotingDapp = () => {
               </PopoverBody>
             </PopoverContent>
           </Popover>
+          <Link aria-label="Go to GitHub page" href={zkVoting} passHref>
+            <Icon
+              as={YoutubeIcon}
+              display="block"
+              transition="color 0.2s"
+              cursor="pointer"
+              color="black"
+              w="10"
+              h="10"
+              _hover={{ color: 'gray.600' }}
+            />
+          </Link>
           {zkIdState.confirmingTx && (
             <Text color="black">
               Confirming Tx.. <Spinner />

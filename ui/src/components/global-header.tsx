@@ -50,6 +50,20 @@ function DesktopMenuLinks() {
       <MenuLink text={'Boilerplate'} link={Links.boilerplate} />
       <MenuLink text={'About'} link={Links.about} />
       <MenuLink text={'Contribute'} link={Links.contribute} />
+      <Link
+        ml="10px"
+        bgGradient="linear(to-l, gray.700, gray.500)"
+        p="7px 10px"
+        rounded="4px"
+        _hover={{
+          textDecoration: 'none',
+          bgGradient: 'linear(to-l, gray.800, gray.800)',
+        }}
+        fontWeight={500}
+        href={Links.subscribe}
+      >
+        Subscribe
+      </Link>
     </Stack>
   );
 }
@@ -92,6 +106,7 @@ function MobileMenuLinks() {
         >
           <Link href={Links.tools}>Tools</Link>
           <Link href={Links.boilerplate}>Boilerplate</Link>
+          <Link href={Links.subscribe}>Subscribe</Link>
           <Link href={Links.about}>About</Link>
           <Link href={Links.contribute}>Contribute</Link>
           <CloseButton
