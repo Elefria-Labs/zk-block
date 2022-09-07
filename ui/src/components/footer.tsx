@@ -27,6 +27,9 @@ function NavigationLinks() {
         <Link _hover={{ color: 'black' }} href={Links.boilerplate}>
           Boilerplate
         </Link>
+        <Link _hover={{ color: 'black' }} href={Links.subscribe}>
+          Subscribe
+        </Link>
         <Link _hover={{ color: 'black' }} href={Links.contribute}>
           Contribute
         </Link>
@@ -59,6 +62,15 @@ function NavigationLinks() {
           href={Links.boilerplate}
         >
           Boilerplate
+        </Link>
+        <Link
+          py="7px"
+          borderBottomWidth={1}
+          borderBottomColor="gray.800"
+          _hover={{ color: 'gray' }}
+          href={Links.subscribe}
+        >
+          Subscribe
         </Link>
         <Link
           py="7px"
