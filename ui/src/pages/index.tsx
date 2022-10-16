@@ -109,7 +109,7 @@ const Index = () => {
                     Voting ( using Semaphore)
                   </Button>
                 </Link>
-                <Link href="" passHref>
+                {/* <Link href="" passHref>
                   <Button
                     disabled
                     bg="black"
@@ -119,7 +119,7 @@ const Index = () => {
                     {' '}
                     zK Authentication (coming soon)
                   </Button>
-                </Link>
+                </Link> */}
               </Stack>
               <StatusChecklist />
             </Flex>

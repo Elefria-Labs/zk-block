@@ -27,6 +27,9 @@ function NavigationLinks() {
         <Link _hover={{ color: 'black' }} href={Links.boilerplate}>
           Boilerplate
         </Link>
+        <Link _hover={{ color: 'black' }} target="_blank" href={Links.blog}>
+          Learn
+        </Link>
         <Link _hover={{ color: 'black' }} href={Links.subscribe}>
           Subscribe
         </Link>
@@ -62,6 +65,16 @@ function NavigationLinks() {
           href={Links.boilerplate}
         >
           Boilerplate
+        </Link>
+        <Link
+          py="7px"
+          borderBottomWidth={1}
+          borderBottomColor="gray.800"
+          _hover={{ color: 'gray' }}
+          href={Links.blog}
+          target="_blank"
+        >
+          Blog
         </Link>
         <Link
           py="7px"
@@ -132,7 +145,7 @@ export function Footer() {
               fontWeight={600}
               fontSize="13px"
               _hover={{ textDecoration: 'none', bg: 'gray.600' }}
-              href="https://github.com/heypran"
+              href="https://github.com/heypran/zk-block"
               target="_blank"
             >
               @heypran

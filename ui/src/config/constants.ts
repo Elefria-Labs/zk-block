@@ -23,6 +23,7 @@ export const Links = {
   home: 'https://zkblock.app/',
   tools: 'https://zkblock.app/',
   boilerplate: 'https://boilerplate.zkblock.app/',
+  blog: 'https://blog.zkblock.app/',
   contribute: 'https://zkblock.app/contribute',
   about: 'https://zkblock.app/about',
   subscribe: 'https://zkblock.app/subscribe',
