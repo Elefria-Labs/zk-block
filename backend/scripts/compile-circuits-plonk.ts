@@ -27,8 +27,8 @@ async function main() {
     fs.mkdirSync(buildPath, { recursive: true })
   }
 
-  if (!fs.existsSync(`${buildPath}/powersOfTau28_hez_final_08.ptau`)) {
-    const url = "https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_08.ptau"
+  if (!fs.existsSync(`${buildPath}/powersOfTau28_hez_final_16.ptau`)) {
+    const url = "https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_16.ptau"
 
     await download(url, buildPath)
   }
@@ -37,7 +37,7 @@ async function main() {
 
   await plonk.setup(
     `${buildPath}/circuit.r1cs`,
-    `${buildPath}/powersOfTau28_hez_final_08.ptau`,
+    `${buildPath}/powersOfTau28_hez_final_16.ptau`,
     `${buildPath}/circuit_final_plonk.zkey`,
     logger
   )
@@ -56,7 +56,7 @@ async function main() {
 
   fs.renameSync(`${buildPath}/circuit_js/circuit.wasm`, `${buildPath}/circuit.wasm`)
   rimraf.sync(`${buildPath}/circuit_js`)
-  rimraf.sync(`${buildPath}/powersOfTau28_hez_final_08.ptau`)
+  rimraf.sync(`${buildPath}/powersOfTau28_hez_final_16.ptau`)
   rimraf.sync(`${buildPath}/circuit.r1cs`)
 }
 
