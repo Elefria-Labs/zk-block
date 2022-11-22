@@ -30,6 +30,9 @@ function NavigationLinks() {
         <Link _hover={{ color: 'black' }} target="_blank" href={Links.blog}>
           Learn
         </Link>
+        <Link _hover={{ color: 'black' }} href={Links.zkChains}>
+          Zk Chains
+        </Link>
         <Link _hover={{ color: 'black' }} href={Links.subscribe}>
           Subscribe
         </Link>
@@ -74,7 +77,17 @@ function NavigationLinks() {
           href={Links.blog}
           target="_blank"
         >
-          Blog
+          Learn
+        </Link>
+        <Link
+          py="7px"
+          borderBottomWidth={1}
+          borderBottomColor="gray.800"
+          _hover={{ color: 'gray' }}
+          href={Links.zkChains}
+          target="_blank"
+        >
+          Zk Chains
         </Link>
         <Link
           py="7px"

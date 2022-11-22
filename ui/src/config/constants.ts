@@ -24,6 +24,7 @@ export const Links = {
   tools: 'https://zkblock.app/',
   boilerplate: 'https://boilerplate.zkblock.app/',
   blog: 'https://blog.zkblock.app/',
+  zkChains: 'https://www.zkblock.app/zk-networks',
   contribute: 'https://zkblock.app/contribute',
   about: 'https://zkblock.app/about',
   subscribe: 'https://zkblock.app/subscribe',
