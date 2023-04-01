@@ -16,7 +16,6 @@ export const contractAddresses: Record<string, Record<string, string>> = {
     // Harmony Devnet
     '1666900000': '0xC0fD6B7D04858b6C1B90Bac369b18c4B5424A0d0',
   },
-  // add more contract addresses here...
 };
 
 export const Links = {
