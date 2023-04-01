@@ -76,7 +76,7 @@ const VotingDapp = () => {
 
     getAllPolls();
   }, [chainId, account, votingContract]);
-  console.log('zkIdState.confirmingTx', zkIdState);
+
   return (
     <div>
       <Container maxW="container.lg" pb="16px">
