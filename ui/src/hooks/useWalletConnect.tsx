@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-
 import { ethers, providers } from 'ethers';
 import Web3Modal from 'web3modal';
 import { getNetworkForMetamask, networkConfig } from '@config/network';
@@ -7,14 +6,7 @@ import { toHex } from '@utils/wallet';
 
 export const networkOptions = Object.values(networkConfig);
 
-const providerOptions = {
-  // walletconnect: {
-  //   package: WalletConnect, // required
-  //   options: {
-  //     infuraId: INFURA_ID, // required
-  //   },
-  // },
-};
+const providerOptions = {};
 
 export const useWalletModal = () => {
   const hasWindow = typeof window !== 'undefined';
