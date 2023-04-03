@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, HamburgerIcon } from '@chakra-ui/icons';
 import {
   Box,
   CloseButton,
@@ -8,6 +8,10 @@ import {
   IconButton,
   Image,
   Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   Text,
 } from '@chakra-ui/react';
@@ -52,7 +56,32 @@ function DesktopMenuLinks() {
       <MenuLink text={'Boilerplate'} link={Links.boilerplate} />
       <MenuLink text={'Learn'} newTab link={Links.blog} />
       <MenuLink text={'Zk Chains'} link={Links.zkChains} />
-      <MenuLink text={'About'} link={Links.about} />
+      <Menu>
+        {({ isOpen }) => (
+          <>
+            <MenuButton
+              isActive={isOpen}
+              as={Text}
+              color="black"
+              rightIcon={<ChevronDownIcon />}
+              cursor="pointer"
+            >
+              {'Playgrounds'}
+            </MenuButton>
+            <MenuList color="black">
+              <MenuItem>
+                <MenuLink text={'EIP-712'} link={Links.eip712} />
+              </MenuItem>
+              <MenuItem>
+                <MenuLink text={'ERC-191'} link={Links.erc191} />
+              </MenuItem>
+              <MenuItem>
+                <MenuLink text={'Tx Decoder'} link={Links.txDecoder} />
+              </MenuItem>
+            </MenuList>
+          </>
+        )}
+      </Menu>
       <MenuLink text={'Contribute'} link={Links.contribute} />
       <Link
         ml="10px"
