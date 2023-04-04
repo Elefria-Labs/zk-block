@@ -3,7 +3,9 @@
 Website- [ZkBlock](https://zkblock.app)
 The current sample zk-dapp has an age verification circuit.
 
-[Read walkthrough guide on Hackernoon](https://hackernoon.com/how-to-use-a-zero-knowledge-dapp-boilerplate)
+##### Repository for other tools [Zk-Tools](https://github.com/heypran/zk-tools)
+
+[Read boilerplate walkthrough guide on Hackernoon](https://hackernoon.com/how-to-use-a-zero-knowledge-dapp-boilerplate)
 
 ![](https://i.imgur.com/waxVImv.png)
 
